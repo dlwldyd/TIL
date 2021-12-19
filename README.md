@@ -1,3 +1,3 @@
 # Today I Learned(TIL)
 ## Spring
-* [스프링을 사용하는 이유](spring/스프링을_사용하는_이유.md)
+* [의존관계 주입(DI)란](spring/의존관계%20주입(DI)란.md)
