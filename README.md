@@ -11,3 +11,4 @@
 ## 웹
 * [HTTP 기초](web/http.md)
 * [HTTP 메서드](web/httpMethod.md)
+* [HTTP 상태코드](web/httpStatusCode.md)
