@@ -10,3 +10,4 @@
 * [싱글톤 패턴](design%20pattern/singleton-pattern.md)
 ## 웹
 * [HTTP 기초](web/http.md)
+* [HTTP 메서드](web/httpMethod.md)
