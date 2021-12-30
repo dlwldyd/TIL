@@ -6,7 +6,9 @@
 * [IoC(Inversion of Control)](spring/IoC(Inversion%20of%20Control).md)
 * [빈 스코프와 생명주기 콜백](spring/빈_스코프와_생명주기_콜백.md)
 * [Servlet](spring/servlet.md)
-* [스프링 MVC 동작 흐름](spring/spring-mvc-flow.md)
+* 스프링 MVC
+  + [스프링 MVC 동작 흐름](spring/spring-mvc-flow.md)
+  + [HTTP 요청 매핑](spring/http-request-mapping.md)
 ## 디자인 패턴
 * [싱글톤 패턴](design%20pattern/singleton-pattern.md)
 * [PRG 패턴](design%20pattern/prg-pattern.md)
