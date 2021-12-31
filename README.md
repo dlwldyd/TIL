@@ -8,6 +8,7 @@
 * [Servlet](spring/servlet.md)
 * 스프링 MVC
   + [스프링 MVC 동작 흐름](spring/spring-mvc-flow.md)
+  + [메시지 컨버터](spring/message-converter.md)
   + [HTTP 요청 매핑](spring/http-request-mapping.md)
 ## 디자인 패턴
 * [싱글톤 패턴](design%20pattern/singleton-pattern.md)
