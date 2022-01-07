@@ -4,14 +4,15 @@
 * [빈 스코프와 생명주기 콜백](spring/bean-scope.md)
 * [Servlet](spring/servlet.md)
 * [검증](spring/validation.md)
-* DI(Dependency Injection)
+* [쿠키, 세션 처리](spring/spring-cookie-session.md)
+* __DI(Dependency Injection)__
     + [DI를 사용하는 이유](spring/DI(Dependency%20Injection).md)
     + [컴포넌트 스캔에서 의존관계 주입 방법](spring/component_scan.md)
-* 스프링 MVC
+* __스프링 MVC__
   + [스프링 MVC 동작 흐름](spring/spring-mvc-flow.md)
   + [메시지 컨버터](spring/message-converter.md)
   + [HTTP 요청 매핑](spring/http-request-mapping.md)
-* 타임리프
+* __타임리프__
   + [타임리프 기본 사용법](spring/thymeleaf-uses.md)
   + [타임리프, 스프링 통합](spring/thymeleaf-spring-integration.md)
   + [메시지, 국제화](spring/messages.md)
