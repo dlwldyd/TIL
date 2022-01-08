@@ -10,7 +10,7 @@
     + [컴포넌트 스캔에서 의존관계 주입 방법](spring/component_scan.md)
 * __스프링 MVC__
   + [스프링 MVC 동작 흐름](spring/spring-mvc-flow.md)
-  + [메시지 컨버터](spring/message-converter.md)
+  + [메시지 컨버터, Argument Resolver](spring/message-converter.md)
   + [HTTP 요청 매핑](spring/http-request-mapping.md)
   + [서블릿 필터, 스프링 인터셉터](spring/filter-interceptor.md)
 * __타임리프__
