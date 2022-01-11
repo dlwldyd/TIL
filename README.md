@@ -6,6 +6,7 @@
 * [검증](spring/validation.md)
 * [쿠키, 세션 처리](spring/spring-cookie-session.md)
 * [HTTP 요청 매핑](spring/http-request-mapping.md)
+* [타입 컨버터](spring/type-converter.md)
 * __DI(Dependency Injection)__
     + [DI를 사용하는 이유](spring/DI(Dependency%20Injection).md)
     + [컴포넌트 스캔에서 의존관계 주입 방법](spring/component_scan.md)
