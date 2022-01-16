@@ -26,6 +26,7 @@
 * [템플릿 메서드 패턴](design%20pattern/template-method.md)
 * [전략 패턴(템플릿 콜백 패턴)](design%20pattern/strategy.md)
 * [프록시 패턴](design%20pattern/proxy-pattern.md)
+* [데코레이터 패턴](design%20pattern/decorator-pattern.md)
 ## 웹
 * [HTTP 기초](web/http.md)
 * [HTTP 메서드](web/httpMethod.md)
