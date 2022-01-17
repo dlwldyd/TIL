@@ -20,6 +20,8 @@
   + [타임리프 기본 사용법](spring/thymeleaf-uses.md)
   + [타임리프, 스프링 통합](spring/thymeleaf-spring-integration.md)
   + [메시지, 국제화](spring/messages.md)
+* __AOP__
+  + [동적 프록시](spring/dynamic-proxy.md)
 ## 디자인 패턴
 * [싱글톤 패턴](design%20pattern/singleton-pattern.md)
 * [PRG 패턴](design%20pattern/prg-pattern.md)
