@@ -22,6 +22,7 @@
   + [메시지, 국제화](spring/messages.md)
 * __AOP__
   + [동적 프록시](spring/dynamic-proxy.md)
+  + [빈 후처리기](spring/bean-postprocessor.md)
 ## 디자인 패턴
 * [싱글톤 패턴](design%20pattern/singleton-pattern.md)
 * [PRG 패턴](design%20pattern/prg-pattern.md)
