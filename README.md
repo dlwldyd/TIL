@@ -25,6 +25,8 @@
   + [동적 프록시](spring/dynamic-proxy.md)
   + [스프링 AOP](spring/spring-aop.md)
   + [AspectJ 포인트컷 표현식](spring/aspecj.md)
+## JPA
+* [영속성 컨텍스트](jpa/persistence-context.md)
 ## 디자인 패턴
 * [싱글톤 패턴](design%20pattern/singleton-pattern.md)
 * [PRG 패턴](design%20pattern/prg-pattern.md)
