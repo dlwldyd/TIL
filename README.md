@@ -29,6 +29,7 @@
 * [JPA 기본](jpa/jpa-base.md)
 * [영속성 컨텍스트](jpa/persistence-context.md)
 * [엔티티 매핑](jpa/entity-mapping.md)
+* [연관관계 매핑](jpa/relationship-mapping.md)
 ## 디자인 패턴
 * [싱글톤 패턴](design%20pattern/singleton-pattern.md)
 * [PRG 패턴](design%20pattern/prg-pattern.md)
