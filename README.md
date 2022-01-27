@@ -40,7 +40,7 @@
 * [데코레이터 패턴](design%20pattern/decorator-pattern.md)
 * [옵저버 패턴](design%20pattern/observer-pattern.md)
 * [빌더 패턴](design%20pattern/builder-pattern.md)
-* [팩토리 메서드 패턴](img/factory-method.png)
+* [팩토리 메서드 패턴](design%20pattern/factory-method.md)
 ## 웹
 * [HTTP 기초](web/http.md)
 * [HTTP 메서드](web/httpMethod.md)
