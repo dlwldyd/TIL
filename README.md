@@ -32,6 +32,7 @@
 * [연관관계 매핑](jpa/relationship-mapping.md)
 * [상속관계 매핑, @MappedSuperclass](jpa/inheritance-mapping.md)
 * [즉시 로딩, 지연 로딩](jpa/lazy-loading.md)
+* [영속성 전이, 고아 객체](jpa/cascade.md)
 ## 디자인 패턴
 * [싱글톤 패턴](design%20pattern/singleton-pattern.md)
 * [PRG 패턴](design%20pattern/prg-pattern.md)
