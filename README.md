@@ -35,6 +35,7 @@
 * [영속성 전이, 고아 객체](jpa/cascade.md)
 * [값 타입](jpa/value-type.md)
 * [JPQL](jpa/jpql.md)
+* [OSIV](jpa/osiv.md)
 ## 디자인 패턴
 * [싱글톤 패턴](design%20pattern/singleton-pattern.md)
 * [PRG 패턴](design%20pattern/prg-pattern.md)
