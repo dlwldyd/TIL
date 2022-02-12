@@ -35,6 +35,7 @@
 * [영속성 전이, 고아 객체](jpa/cascade.md)
 * [값 타입](jpa/value-type.md)
 * [JPQL](jpa/jpql.md)
+* [이벤트 어노테이션](jpa/event-annotation.md)
 * [OSIV](jpa/osiv.md)
 * __Spring Data JPA__
   + [공통 인터페이스](jpa/common_jpa_interface.md)
