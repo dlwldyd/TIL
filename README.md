@@ -41,6 +41,7 @@
   + [쿼리 메서드](jpa/query-mothod.md)
   + [사용자 정의 리포지토리](jpa/custom-repository.md)
   + [Auditing](jpa/auditing.md)
+  + [페이징](jpa/paging.md)
 ## 디자인 패턴
 * [싱글톤 패턴](design%20pattern/singleton-pattern.md)
 * [PRG 패턴](design%20pattern/prg-pattern.md)
