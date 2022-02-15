@@ -46,6 +46,7 @@
   + [Persistable](jpa/persistable.md)
 * __QueryDSL__
   + [QueryDSL 기본](jpa/querydsl-basic.md)
+  + [프로젝션과 반환타입](jpa/projection.md)
 ## 디자인 패턴
 * [싱글톤 패턴](design%20pattern/singleton-pattern.md)
 * [PRG 패턴](design%20pattern/prg-pattern.md)
