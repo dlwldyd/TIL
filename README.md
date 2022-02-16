@@ -49,6 +49,7 @@
   + [프로젝션과 반환타입](jpa/projection.md)
   + [동적 쿼리](jpa/dynamic-query.md)
   + [벌크성 쿼리, SQL function](jpa/bulk-query.md)
+  + [QueryDSL 사용해서 Page<> 반환](jpa/Querydsl-Page.md)
 ## 디자인 패턴
 * [싱글톤 패턴](design%20pattern/singleton-pattern.md)
 * [PRG 패턴](design%20pattern/prg-pattern.md)
