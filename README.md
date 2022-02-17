@@ -71,3 +71,4 @@
 * [volatile](java/volatile.md)
 * [Atomic 클래스](java/atomic.md)
 * [ThreadLocal](java/threadlocal.md)
+* [java.util.function](java/function.md)
