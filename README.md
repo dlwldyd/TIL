@@ -27,6 +27,9 @@
   + [AspectJ 포인트컷 표현식](spring/aspecj.md)
 * __Spring Security__
   + [DelegatingFilterProxy, FilterChainProxy](spring/DelegatingFilterProxy.md)
+  + [스프링 시큐리티 설정 API, 스프링 시큐리티 필터](spring/spring-security-filter.md)
+  + [다중 보안 설정](spring/multi-config.md)
+  + [SecurityContext](spring/SecurityContext.md)
 ## JPA
 * [JPA 기본](jpa/jpa-base.md)
 * [영속성 컨텍스트](jpa/persistence-context.md)
