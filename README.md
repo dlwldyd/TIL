@@ -31,6 +31,8 @@
   + [다중 보안 설정](spring/multi-config.md)
   + [SecurityContext](spring/SecurityContext.md)
   + [Form Login 인증 처리](spring/form-login.md)
+  + [AJAX, RestfulAPI 인증 처리](spring/ajax-login.md)
+  + [커스텀 DSL](spring/custom-dsl.md)
 ## JPA
 * [JPA 기본](jpa/jpa-base.md)
 * [영속성 컨텍스트](jpa/persistence-context.md)
