@@ -8,6 +8,7 @@
 * [HTTP 요청 매핑](spring/http-request-mapping.md)
 * [타입 컨버터](spring/type-converter.md)
 * [파일 업로드](spring/file-upload.md)
+* [Mockito](spring/mockito.md)
 * __DI(Dependency Injection)__
     + [DI를 사용하는 이유](spring/DI(Dependency%20Injection).md)
     + [컴포넌트 스캔에서 의존관계 주입 방법](spring/component_scan.md)
@@ -31,7 +32,7 @@
   + [다중 보안 설정](spring/multi-config.md)
   + [SecurityContext](spring/SecurityContext.md)
   + [Form Login 인증 처리](spring/form-login.md)
-  + [AJAX, RestfulAPI 인증 처리](spring/ajax-login.md)
+  + [AJAX, REST API 인증 처리](spring/ajax-login.md)
   + [커스텀 DSL](spring/custom-dsl.md)
 ## JPA
 * [JPA 기본](jpa/jpa-base.md)
