@@ -82,3 +82,4 @@
 * [ThreadLocal](java/threadlocal.md)
 * [java.util.function](java/function.md)
 * [인텔리제이 단축키](java/intelliJ.md)
+* [직렬화(Serializable)](java/Serializable.md)
