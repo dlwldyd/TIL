@@ -9,6 +9,7 @@
 * [타입 컨버터](spring/type-converter.md)
 * [파일 업로드](spring/file-upload.md)
 * [Mockito](spring/mockito.md)
+* [FactoryBean](spring/FactoryBean.md)
 * __DI(Dependency Injection)__
     + [DI를 사용하는 이유](spring/DI(Dependency%20Injection).md)
     + [컴포넌트 스캔에서 의존관계 주입 방법](spring/component_scan.md)
@@ -34,6 +35,7 @@
   + [Form Login 인증 처리](spring/form-login.md)
   + [AJAX, REST API 인증 처리](spring/ajax-login.md)
   + [커스텀 DSL](spring/custom-dsl.md)
+  + [계층 권한 적용하기](spring/role-hierarchy.md)
 ## JPA
 * [JPA 기본](jpa/jpa-base.md)
 * [영속성 컨텍스트](jpa/persistence-context.md)
