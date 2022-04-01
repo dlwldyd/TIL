@@ -35,7 +35,9 @@
   + [Form Login 인증 처리](spring/form-login.md)
   + [AJAX, REST API 인증 처리](spring/ajax-login.md)
   + [커스텀 DSL](spring/custom-dsl.md)
+  + [커스텀 SecurityMetadataSource, FilterSecurityInterceptor 등록하기](spring/FilterSecurityInterceptor.md)
   + [계층 권한 적용하기](spring/role-hierarchy.md)
+  + [커스텀 AccessDecisionVoter 등록하기](spring/AccessDecisionVoter.md)
 ## JPA
 * [JPA 기본](jpa/jpa-base.md)
 * [영속성 컨텍스트](jpa/persistence-context.md)
@@ -85,3 +87,6 @@
 * [java.util.function](java/function.md)
 * [인텔리제이 단축키](java/intelliJ.md)
 * [직렬화(Serializable)](java/Serializable.md)
+## Go
+* [Go 기본](Go/basic.md)
+* [자료구조](go/data-structure.md)
