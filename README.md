@@ -38,6 +38,7 @@
   + [커스텀 SecurityMetadataSource, FilterSecurityInterceptor 등록하기](spring/FilterSecurityInterceptor.md)
   + [계층 권한 적용하기](spring/role-hierarchy.md)
   + [커스텀 AccessDecisionVoter 등록하기](spring/AccessDecisionVoter.md)
+  + [메서드 보안 적용](spring/method-security.md)
 ## JPA
 * [JPA 기본](jpa/jpa-base.md)
 * [영속성 컨텍스트](jpa/persistence-context.md)

@@ -41,11 +41,13 @@ using namespace std;
 
 int n, m;
 
+//배열 num의 시작지점(s)에서 끝까지 중 r개만큼을 선택
 void select(int s, int r, int *num, string p){
     if(r == 0){
         cout << p;
         return;
     }
+    //i는 무조건 선택, i를 선택했기 때문에 r-1개 만큼 더 선택해야 하므로 i는 n-(r-1)까지만 순환 가능
     for(int i=s; i<n-r+1; i++){
         p[(m-r)*2] = num[i] + '0';
         select(i+1, r-1, num, p);        
