@@ -1,5 +1,5 @@
 # 자료구조
-## Array, Slic
+## Array, Slice
 ```go
 package main
 
@@ -14,6 +14,7 @@ func main() {
 
 	// name1 = append(name1, "강동원", "허경영") -> 불가
 	name2 = append(name2, "강동원", "허경영")
+    name2 = append(name2, name1...) // slice에 문자열 배열을 붙이는게 아니라 문자열 배열의 콘텐츠를 붙임, ... 붙여야함
 	
 	fmt.Println(name1)
 	fmt.Println(name2)
@@ -22,6 +23,7 @@ func main() {
 * Array는 크기가 고정되어있는 배열, Slice는 크기가 고정되어 있지 않은 배열이다.
 * Slice는 append()를 쓸 수 있지만 Array는 append()를 쓸 수 없다.
 * append()는 주어진 Slice를 바꾸는 게 아니라 주어진 Slice에 값을 붙인 새로운 Slice를 반환한다. 따라서 주어진 Slice를 바꾸고 싶다면 `=`를 통해 할당해줄 필요가 있다.
+* slice에 같은 타입의 slice나 배열을 append(name2, name1...)를 통해 붙일 수 있다. `{"홍길동", "안철수", "김수미", {"홍길동", "안철수", "김수미"}} -> X`, `{"홍길동", "안철수", "김수미", "홍길동", "안철수", "김수미"} -> O`
 ## map
 ```go
 package main
