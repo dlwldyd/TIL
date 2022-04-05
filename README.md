@@ -66,6 +66,7 @@
   + [QueryDSL 사용해서 Page<> 반환](jpa/Querydsl-Page.md)
 ## 디자인 패턴
 * [싱글톤 패턴](design%20pattern/singleton-pattern.md)
+* [프로토타입 패턴](design%20pattern/prototype-pattern.md)
 * [PRG 패턴](design%20pattern/prg-pattern.md)
 * [템플릿 메서드 패턴](design%20pattern/template-method.md)
 * [전략 패턴(템플릿 콜백 패턴)](design%20pattern/strategy.md)
