@@ -1,14 +1,22 @@
 # Echo
 ## http 요청 및 응답
 ```go
-//컨트롤러라 보면됨
-package homeController
+package home
 
 import (
 	// "net/http"
 	
 	"github.com/labstack/echo/v4"
 )
+
+//컨트롤러라 보면됨
+type HomeController struct {
+    homeService HomeService;
+}
+
+func New(homeService HomeService) *HomeController {
+	return &HomeController{homeService: homeService}
+}
 
 // 핸들러 메서드라 보면됨
 func HandleHome(c echo.Context) error {
@@ -30,7 +38,7 @@ import (
 
 func main() {
 	e := echo.New()
-	e.GET("/", homeController.HandleHome)
+	e.GET("/", home.HandleHome)
     // e.POST("/", homeController.HandleHome)
     // e.PUT("/", homeController.HandleHome)
     // e.DELETE("/", homeController.HandleHome)
