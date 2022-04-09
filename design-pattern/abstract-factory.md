@@ -1,5 +1,5 @@
 # 추상 팩토리 패턴
-<img src="img/../../img/abstract-factory.png">
+<img src="../img/abstract-factory.png">
 
 ```java
 public abstract class Item {

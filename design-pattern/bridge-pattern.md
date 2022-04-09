@@ -1,5 +1,5 @@
 # 브릿지 패턴
-<img src="../../TIL/img/bridge-pattern.png">
+<img src="../img/bridge-pattern.png">
 
 ```java
 @RequiredArgsConstructor

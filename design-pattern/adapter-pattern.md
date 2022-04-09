@@ -1,5 +1,5 @@
 # 어댑터 패턴
-<img src="../../TIL/img/adapter-pattern.png">
+<img src="../img/adapter-pattern.png">
 
 ```java
 //기존 코드

@@ -19,8 +19,28 @@ ReactDOM.render(<Container/>, root);
 * State를 사용하지 않으면 이벤트로 인해 업데이트된 데이터를 화면에 보여주기 위해 ReactDOM.render(<Container/>, root)를 호출해 다시 화면을 렌더링 해줘야 한다.
 ## State 사용
 ```javascript
+//onChange
 const root = document.getElementById("root");
 const Container = () => {
+    const [number, setNumber] = React.useState(0);
+    function num(event) {
+        setNumber(event.target.value);
+    }
+    return (
+        <div>
+            <h3>Number : {number}</h3>
+            <label htmlFor="number">숫자를 입력해 주세요</label>
+            <input id="number" type="number" value={number} onChange={num}></input>
+        </div>
+    );   
+}
+ReactDOM.render(<Container/>, root);
+```
+```javascript
+//onClick
+const root = document.getElementById("root");
+const Container = () => {
+    //useState의 파라미터로 cnt의 default값(최초의 값)이 들어간다.
     const [cnt, setCnt] = React.useState(0);
     function cntUp() {
         // setCnt(cnt + 1); 값을 넣을 수도 있다.

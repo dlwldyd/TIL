@@ -1,5 +1,5 @@
 # 프로토타입 패턴
-<img src="img/../../img/prototype-pattern.png">
+<img src="../img/prototype-pattern.png">
 
 ```java
 public class Element {

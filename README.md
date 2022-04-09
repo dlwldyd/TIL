@@ -65,7 +65,7 @@
   + [벌크성 쿼리, SQL function](jpa/bulk-query.md)
   + [QueryDSL 사용해서 Page<> 반환](jpa/Querydsl-Page.md)
 ## 디자인 패턴
-* [싱글톤 패턴](design-pattern/singleton-pattern.md))
+* [싱글톤 패턴](design-pattern/singleton-pattern.md)
 * [프로토타입 패턴](design-pattern/prototype-pattern.md)
 * [PRG 패턴](design-pattern/prg-pattern.md)
 * [템플릿 메서드 패턴](design-pattern/template-method.md)
@@ -77,6 +77,10 @@
 * [팩토리 메서드 패턴](design-pattern/factory-method.md)
 * [추상 팩토리 패턴](design-pattern/abstract-factory.md)
 * [어댑터 패턴](design-pattern/adapter-pattern.md)
+* [브릿지 패턴](design-pattern/bridge-pattern.md)
+* [퍼사드 패턴](design-pattern/facade-pattern.md)
+* [컴포지트 패턴](design-pattern/composite-pattern.md)
+* [플라이웨이트 패턴](design-pattern/flyweight-pattern.md)
 ## 웹
 * [HTTP 기초](web/http.md)
 * [HTTP 메서드](web/httpMethod.md)

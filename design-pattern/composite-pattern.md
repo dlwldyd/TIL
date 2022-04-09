@@ -1,4 +1,6 @@
 # 컴포지트 패턴
+<img src="../img/composite-pattern.png">
+
 ```java
 public class Client {
     Component composite1 = new Composite();
