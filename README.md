@@ -81,6 +81,10 @@
 * [퍼사드 패턴](design-pattern/facade-pattern.md)
 * [컴포지트 패턴](design-pattern/composite-pattern.md)
 * [플라이웨이트 패턴](design-pattern/flyweight-pattern.md)
+* [책임 연쇄 패턴](design-pattern/chain-of-responsibility.md)
+* [커맨드 패턴](design-pattern/command-pattern.md)
+* [인터프리터 패턴](design-pattern/interpreter-pattern.md)
+* [이터레이터 패턴](design-pattern/iterator-pattern.md)
 ## 웹
 * [HTTP 기초](web/http.md)
 * [HTTP 메서드](web/httpMethod.md)

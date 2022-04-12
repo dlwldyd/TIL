@@ -69,6 +69,7 @@ const Container = () => {
 ReactDOM.render(<Container/>, root);
 ```
 * 동적으로 JSX 내의 속성을 붙이거나 뗄 때는 bool 타입을 통해 false면 속성이 붙지 않고, true면 속성이 붙도록 할 수 있다.
+* JSX에서는 {}내에서 자바스크립트 문법을 사용할 수 있다.
 ## JSX 내 html 속성값
 * class -> className
 * for -> htmlFor
