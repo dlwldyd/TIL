@@ -10,6 +10,7 @@
 * [파일 업로드](spring/file-upload.md)
 * [Mockito](spring/mockito.md)
 * [FactoryBean](spring/FactoryBean.md)
+* [JDBC](spring/JDBC.md)
 * __DI(Dependency Injection)__
     + [DI를 사용하는 이유](spring/DI(Dependency%20Injection).md)
     + [컴포넌트 스캔에서 의존관계 주입 방법](spring/component_scan.md)
@@ -85,6 +86,10 @@
 * [커맨드 패턴](design-pattern/command-pattern.md)
 * [인터프리터 패턴](design-pattern/interpreter-pattern.md)
 * [이터레이터 패턴](design-pattern/iterator-pattern.md)
+* [중재자 패턴](design-pattern/mediator-pattern.md)
+* [메멘토 패턴](design-pattern/memento-pattern.md)
+* [상태 패턴](design-pattern/state-pattern.md)
+* [비지터 패턴](design-pattern/visitor-pattern.md)
 ## 웹
 * [HTTP 기초](web/http.md)
 * [HTTP 메서드](web/httpMethod.md)
@@ -105,8 +110,10 @@
 * [패키지](Go/package.md)
 * [Echo](Go/echo.md)
 ## ReactJS
-* [Vanilla javascript와 ReactJS의 차이](React/difference.md)
 * [JSX](React/JSX.md)
 * [State](React/state.md)
+* [props](React/props.md)
+* [effect](React/effect.md)
+* [React Router](React/router.md)
 ## 코딩테스트
 * [코딩테스트](coding-test/coding-test.md)

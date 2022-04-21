@@ -1,5 +1,43 @@
 # JSX
 JSX는 html과 유사하게, 그리고 쉽게 react 요소를 만들기 위해 사용하는 문법이다.
+## JSX 사용하기 전 후 비교
+```javascript
+...
+
+<body>
+</body>
+<script>
+    const body = document.querySelector("body");
+    const h2 = React.createElement("h2", null, "Click here");
+    const btn = React.createElement("button", {id: "btn", onClick: () => console.log("Clicked")}, "Button");
+    ReactDOM.render(h2, body);
+    ReactDOM.render(btn, body);
+</script>
+
+...
+
+```
+```javascript
+...
+
+<body>
+</body>
+<script type="text/babel">
+    const body = document.querySelector("body");
+    const h2 = (
+        <h2>Click here</h2>
+    );
+    const btn = (
+        <button id="btn" onClick={() => console.log("Clicked")}>Button</button>
+    );
+    ReactDOM.render(h2, body);
+    ReactDOM.render(btn, body);
+</script>
+
+...
+
+```
+* JSX를 사용하면 기존의 html형식을 그대로 사용하기 때문에 코드를 읽기가 더 편하다.
 ## 이벤트 리스너 사용하기
 ```javascript
 ...

@@ -59,3 +59,4 @@ ReactDOM.render(<Container/>, root);
 * React.useState()는 ReactDOM.render()에 들어갈 컴포넌트 내에 넣어야 한다. 컴포넌트 밖에 넣으면 동작하지 않는다.
 * React.useState()의 반환값은 길이 2인 배열인데 첫번째 인자는 렌더링할 데이터이고, 2번째 인자는 modifier(자바의 setter라 생각하면 된다.)이다.
 * modifier가 호출되면 자동으로 ReactDOM.render(<Container/>, root)가 호출된다.
+* modifier를 거치지 않고 State의 값을 바꿀 수 없다. 또한 modifier는 이전의 State를 새로운 값으로 __무조건__ 대체한다. 예를 들면 배열을 사용할 때 이전의 배열에 push()를 사용해 값을 추가하지 못하고 새로운 배열을 만들어서 반환해야한다.
