@@ -91,6 +91,12 @@ export default ChatForm;
 ```
 <img src="./../img/stomp-flow.png">
 
+> SimpleBroker 사용 시 work flow
+
+<img src="./../img/message-flow-broker-relay.png">
+
+> 외부 메세지 브로커 사용 시 work flow
+
 1. 클라이언트는 서버와 SockJS연결을 한다.
 2. 연결이 완료되면 클라이언트는 서버에게 원하는 topic에 대한 subscribe frame을 보내서 해당 토픽에 대한 subscribe를 한다.
 3. 클라이언트는 특정 topic에 대한 메세지를 보낸다.
