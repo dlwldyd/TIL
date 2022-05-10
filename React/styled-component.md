@@ -99,7 +99,6 @@ export default Circle;
 ```
 * 타입스크립트의 인터페이스는 다른 언어의 인터페이스와 달리 객체가 가져야할 메서드를 정의하는 것뿐만 아니라 객체가 가져야할 속성 값을 정의할 수 있다.
 * 인터페이스의 속성 중에서 필수가 아닌 속성을 정의할 때는 `:` 대신에 `?:`를 사용한다. ex) borderColor?: string
-* `??` 를 통해 인터페이스의 속성값이 전달되지 않았을 때(해당 값이 undefined 일때)의 default 값을 지정 가능하다.(그냥 파라미터로 전달 받을 때 default 값을 지정해줘도 된다.) ex) borderColor ?? bgColor
 * 타입스크립트에서는 styled component에 props를 전달할 때 제네릭의 형태로 props의 타입을 명시한다.
 ## 컴포넌트 확장
 ```javascript
@@ -294,7 +293,7 @@ export default App;
 ```
 * styled component 내에서도 선택자를 사용하여 해당 컴포넌트 내에있는 컴포넌트를 선택할 수 있다.
 * 내가 만든 컴포넌트를 선택할 때는 `${...}`를 통해 선택한다.
-* hover나 active 같은 것을 사용할 때 기존에는 `span:hover`처럼 사용했다면 styled component 에서는 선택자가 컴포넌트 안에 있기 때문에 `&:hover`처럼 사용하면 해당 컴포넌트에 대한 hover를 정의할 수 있다.
+* hover나 active 같은 것을 사용할 때 기존에는 `span:hover`처럼 사용했다면 styled component 에서는 선택자가 컴포넌트 안에 있기 때문에 `&:hover`처럼 사용하면 해당 컴포넌트에 대한 hover를 정의할 수 있다.(SCSS와 같음)
 ## 테마
 ```javascript
 import React from 'react';

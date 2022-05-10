@@ -137,6 +137,48 @@ for(int i=1; i<seq.size(); i++) {
 * LCS 알고리즘은 최장 공통 부분 수열을 구하는 알고리즘이다.
 * LCS 알고리즘은 문자열을 2차원 배열로 배치하고 2중 for문을 통해 글자를 비교하며 dp를 통해 문제를 푼다.
 * seq[i][j]값은 s1[i-1]과 s2[j-1]이 같을 때는 seq[i-1][j-1]+1이 seq[i][j] 값이 되고, s1[i-1]과 s2[j-1]이 다를 때는 seq[i][j-1]과 seq[i-1][j] 중 큰 값이 seq[i][j] 값이 된다.
+## 다익스트라 알고리즘
+```c++
+struct cmp {
+    bool operator()(pair<int, int> a, pair<int, int> b) {
+        return a.second > b.second;
+    }
+};
+
+int main() {
+    
+    cin.tie(NULL);
+    cout.tie(NULL);
+    ios::sync_with_stdio(false);
+
+    int v, e, s, a, b, d, minimum = 0;
+    cin >> v >> e >> s;
+    long long dist[v];
+    fill(dist, dist+v, 6000000000);
+    vector<vector<pair<int, int>>> node(v, vector<pair<int, int>>());
+    priority_queue<pair<int, int>, vector<pair<int, int>>, cmp> pq;
+    pq.push(make_pair(s-1, 0));
+    for(int i=0; i<e; i++) {
+        cin >> a >> b >> d;
+        node[a-1].push_back(make_pair(b-1, d));
+    }
+    while(!pq.empty()) {
+        int cur = pq.top().first;
+        int len = pq.top().second;
+        if(len <= dist[cur]) {
+            dist[cur] = len;
+            for(int i=0; i<node[cur].size(); i++) {
+                if(dist[node[cur][i].first] > dist[cur]+node[cur][i].second) {
+                    dist[node[cur][i].first] = dist[cur]+node[cur][i].second;
+                    pq.push(make_pair(node[cur][i].first, dist[node[cur][i].first]));
+                }
+            }
+        }
+        pq.pop();
+    }
+}
+```
+* 우선순위 큐를 사용할 때는 같은 노드를 여러번 갱신한다는 것을 유념하자
 ###  s1[i-1]과 s2[j-1]이 같을 때
 <img src="../img/lcs-same.png">
 

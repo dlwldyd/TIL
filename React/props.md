@@ -35,7 +35,6 @@ function Container() {
 ReactDOM.render(<Container/>, root);
 ```
 * props를 통해 컴포넌트는 부모 컴포넌트로 부터 값을 전달받을 수 있다.(여기서의 부모 컴포넌트는 DOM 구조상의 부모 컴포넌트가 아니라 해당 컴포넌트를 감싸고 있는 함수를 말함)
-* 값을 전달 받지 않더라도 default 값을 지정할 수 있다.
 * 오직 props로 전달되기 때문에 부모 컴포넌트에서 style 속성이나 이벤트 리스너 같은 것을 바로 추가할 수 없다. 자식 컴포넌트가 props로 받은 값을 속성으로 추가하는 작업을 따로 해줘야 한다.
 ## React.memo
 ```javascript
