@@ -1,4 +1,52 @@
 # 코딩테스트
+## 벨만 포드 알고리즘
+```c++
+int n, m, a, b, c;
+cin >> n >> m; // n : 정점 수, m : 간선 수
+long long dist[n+1]; // long long 중요!!
+fill(dist, dist+n+1, INF);
+dist[1] = 0;
+vector<vector<pair<int, int>>> graph(n+1, vector<pair<int, int>>());
+for(int i=0; i<m; i++) {
+    cin >> a >> b >> c; // a에서 b로 가는 간선의 비용이 c임
+    graph[a].push_back(make_pair(b, c));
+}
+for(int i=1; i<n; i++)   { // n-1번 반복
+    for(int from=1; from<graph.size(); from++) {
+        if(dist[from] != INF) { // 갱신된 노드에 대해서만 해당 노드에서 출발하는 간선 검사
+            for(int k=0; k<graph[from].size(); k++) {
+                int to = graph[from][k].first;
+                int cost = graph[from][k].second;
+                if(dist[from] + cost < dist[to]) {
+                    dist[to] = dist[from] + cost;
+                }
+            }
+        }
+    }
+}
+for(int from=1; from<graph.size(); from++) {
+    if(dist[from] != INF) {
+        for(int k=0; k<graph[from].size(); k++) {
+            int to = graph[from][k].first;
+            int cost = graph[from][k].second;
+            if(dist[from] + cost < dist[to]) {
+                cout << "-1\n"; // 한번 더 반복했을 때 값이 갱신되면 음의 순환이 있음
+                return 0;
+            }
+        }
+    }
+}
+for(int i=2; i<=n; i++) {
+    if(dist[i] == INF) {
+        cout << "-1\n";
+    } else {
+        cout << dist[i] << "\n";
+    }
+}
+```
+* 간선의 비용이 음이 존재할 경우에 다익스트라가 아니라 벨만포드를 사용해야한다.
+* 노드가 n개일 경우에 출발노드에서 출발하여 다시 출발노드로 돌아오는 최대 홉수(다른 모든 노드를 거쳐서 오는 경우)는 n이다. 따라서 n번 반복했을 때에도 다른 노드로 가는 비용이 갱신된다면 음의 순환이 존재한다. 반대로 n번 반복했을 때 비용이 갱신되지 않는다면 음의 순환은 없고, 각 노드까지의 최소거리를 구할 수 있다.
+* 만약 음의 순환이 없을 경우 n-1번 갱신했을 때 최소 거리가 확정 된다. n-1번 이전에 모든 간선을 돌면서 한번도 갱신이 이루어지지 않는다면 n-1번 이전에 최소거리를 확정지을 수 있지만 괜히 로직만 복잡해지고 시간은 별로 안줄어드니깐 헛고생 하지 말자
 ## LIS 알고리즘
 ```c++
 // vector<int> v 에는 최장 증가 부분 수열을 구할 배열 값이 들어있다.

@@ -336,5 +336,17 @@ function App() {
 
 export default App;
 ```
+```javascript
+// keyframes에 props 가져오기
+const shrink = (props) => keyframes`
+  from {
+    font-size: ${props => props.theme.fontSize};
+  }
+  to {
+    font-size: 30px;
+  }
+`;
+```
 * 어떤 컴포넌트의 부모 컴포넌트로 `ThemeProvider`컴포넌트를 두면 해당 컴포넌트와 그 자식 컴포넌트들의 css 속성을 일괄적으로 변경할 수 있다.
 * ThemeProvider 컴포넌트의 모든 자식 컴포넌트는 props로 ThemeProvider의 theme을 전달받는다. 그렇기 때문에 ThemeProvider 컴포넌트의 모든 자식 컴포넌트는 ThemeProvider의 theme으로 주어진 object에 접근할 수 있다.
+* keyframes에서 ThemeProvider가 전달한 theme에 접근이 안되는데 함수가 keyframes를 리턴하는 형태로 만들면 keyframes에서 props에 접근할 수 있다.
