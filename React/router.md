@@ -5,7 +5,7 @@ import React from "react";
 import {
   // HashRouter as Router, => 잘 사용 안함
   BrowserRouter as Router,
-  Switch,
+  Routes,
   Route,
 } from "react-router-dom";
 import Detail from "./routes/Detail";
@@ -13,16 +13,11 @@ import Home from "./routes/Home";
 
 function App() {
   return (<Router>
-    {/*Route가 한번에 두개를 렌더링 할 수도 있기 때문에 한번에 하나만 렌더링 하려면 Switch를 넣어야한다.*/}
-    <Switch>
-      {/*구체적인 경로가 위로 오도록 해야한다.*/}
-      <Route path="/movie/:id">
-        <Detail/>
-      </Route>
-      <Route path="/">
-       <Home/>
-      </Route>
-    </Switch>
+    {/*Route가 한번에 두개를 렌더링 할 수도 있기 때문에 한번에 하나만 렌더링 하려면 Routes를 넣어야한다.*/}
+    <Routes>
+      <Route path="/movie/:id" element={<Detail/>} />
+      <Route path="/" element={<Home/>} />
+    </Routes>
   </Router>);
 }
 
