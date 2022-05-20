@@ -241,6 +241,56 @@ int main() {
 }
 ```
 * 우선순위 큐를 사용할 때는 같은 노드를 여러번 갱신한다는 것을 유념하자
+## meet in the middle 알고리즘
+```c++
+// 조합의 합을 구해 sum1, sum2에 넣는다.
+void comb(int start, int end, vector<int> &v, vector<long long> &sum, long long num) {
+    
+    if(start == end) {
+        sum.push_back(num+v[start]);
+        sum.push_back(num);
+        return;
+    }
+    comb(start+1, end, v, sum, num+v[start]);
+    comb(start+1, end, v, sum, num);
+}
+
+int main() {
+    
+    cin.tie(NULL);
+    cout.tie(NULL);
+    ios::sync_with_stdio(false);
+
+    int n, c, result = 0;
+    cin >> n >> c;
+    vector<int> v(n, 0);
+    for(int i=0; i<n; i++) {
+        cin >> v[i];
+    }
+    // v를 반으로 잘러서(v -> v1, v2) v1의 조합의 합은 sum1에 넣고, v2의 조합의 합은 sum2에 넣는다.
+    vector<long long> sum1, sum2;
+    if(n > 1) {
+        comb(0, n/2-1, v, sum1, 0);
+        comb(n/2, v.size()-1, v, sum2, 0);
+        // sum2를 정렬한다.
+        sort(sum2.begin(), sum2.end());
+        for(int i=0; i<sum1.size(); i++) {
+            // sum2[j] < c-sum1[i] 일 때 sum2[j]+sum1[i] < c 이므로 c-sum1[i] 보다 작은 모든 sum2의 요소는 sum1[i]와 더해도 c 보다 작음
+            // 이분탐색을 해서 시간을 줄이는게 중요
+            result += upper_bound(sum2.begin(), sum2.end(), c-sum1[i]) - sum2.begin();
+        }
+        cout << result;
+    } else {
+        if(v[0] > c) {
+            cout << 1;
+        } else {
+            cout << 2;
+        }
+    }
+}
+```
+* n의 크기가 30이고 일 때 c보다 작은 모든 조합을 구하려면 O(2<sup>30</sup>)만큼 시간이 걸린다.
+* meet in the middle 알고리즘을 사용한다면 30을 반으로 쪼개서 조합을 구하기 때문에 O(2<sup>15</sup>log2<sup>15</sup>) 만큼 시간이 걸린다.
 ## 피보나치 수 구하기
 <img src="./../img/Fibonacci.png">
 
