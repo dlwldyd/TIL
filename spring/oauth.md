@@ -21,6 +21,21 @@ spring:
                 scope: # 클라이언트에게 허용된 리소스의 범위
                 - email
                 - profile
+            naver:
+            clientId: 클라이언트 아이디
+            clientSecret: 클라이언트 시크릿
+            scope:
+              - name
+              - email
+            clientName: Naver
+            authorizationGrantType: authorization_code # oauth grant type
+            redirectUri: http://localhost:8080/login/oauth2/code/naver # 네이버는 oauth-client가 제공하는 provider가 아니기 때문에 이걸 적어줘야한다
+        provider:
+          naver:
+            authorizationUri: https://nid.naver.com/oauth2.0/authorize # 네이버 로그인 창
+            tokenUri: https://nid.naver.com/oauth2.0/token # 토큰 발급 uri
+            userInfoUri: https://openapi.naver.com/v1/nid/me # 프로필 접근 uri
+            userNameAttribute: response # naver 에서 사용자 정보를 response 라는 키값에 넣어서 보내준다
 ```
 ```java
 @Configuration
@@ -48,34 +63,112 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 }
 ```
 ```java
+// provider에 따라 attributes로 들어오는 값이 다르기 때문에 인터페이스를 만들어 주는 것이 좋다.
+public interface OAuthUserInfo {
+
+    String getProviderId();
+
+    String getProvider();
+
+    String getEmail();
+
+    String getName();
+
+    Map<String, Object> getAttributes();
+}
+```
+```java
+@RequiredArgsConstructor
+public class GoogleOAuthUserInfo implements OAuthUserInfo{
+
+    private final Map<String, Object> attributes;
+
+    @Override
+    public String getProviderId() {
+        return (String) attributes.get("sub");
+    }
+
+    @Override
+    public String getProvider() {
+        return "google";
+    }
+
+    @Override
+    public String getEmail() {
+        return (String) attributes.get("email");
+    }
+
+    @Override
+    public String getName() {
+        return (String) attributes.get("given_name");
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return this.attributes;
+    }
+}
+```
+```java
+@RequiredArgsConstructor
+public class NaverOAuthUserInfo implements OAuthUserInfo{
+
+    private final Map<String, Object> attributes;
+
+    @Override
+    public String getProviderId() {
+        return (String) attributes.get("id");
+    }
+
+    @Override
+    public String getProvider() {
+        return "naver";
+    }
+
+    @Override
+    public String getEmail() {
+        return (String) attributes.get("email");
+    }
+
+    @Override
+    public String getName() {
+        return (String) attributes.get("name");
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        return this.attributes;
+    }
+}
+
+```
+```java
 // 일반 폼 로그인에서는 UserDetails를 구현한 객체를 SecurityContextHolder에서 principal로 가지고있지만 OAuth를 사용하면 OAuth2User를 구현한 객체를 갖는다. 만약 OAuth와 폼 로그인 둘 다 사용하려면 둘다 구현하면 된다.
+@RequiredArgsConstructor
 public class MemberDetails implements OAuth2User {
 
-    private Member member;
+    private final Member member;
 
-    private Map<String, Object> attributes;
-
-    public MemberDetails(Member member, Map<String, Object> attributes) {
-        this.member = member;
-        this.attributes = attributes;
-    }
+    private final OAuthUserInfo oAuthUserInfo;
 
     // 유저 정보 리턴
     @Override
     public Map<String, Object> getAttributes() {
-        return attributes;
+        return oAuthUserInfo.getAttributes();
     }
 
     //해당 유저의 권한을 리턴
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        List<GrantedAuthority> roles = new ArrayList<>();
+        roles.add(new SimpleGrantedAuthority(member.getRole().getDescription()));
+        return roles;
     }
 
     //sub값 리턴
     @Override
     public String getName() {
-        return (String) attributes.get("sub");
+        return oAuthUserInfo.getProviderId();
     }
 
     public String getUsername() {
@@ -109,11 +202,18 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
+        OAuthUserInfo oAuthUserInfo = null;
 
-        String provider = userRequest.getClientRegistration().getClientId();
-        String providerId = oAuth2User.getAttribute("sub");
-        String email = oAuth2User.getAttribute("email");
-        String nickname = oAuth2User.getAttribute("given_name");
+        String provider = userRequest.getClientRegistration().getRegistrationId();
+
+        if (provider.equals("google")) {
+            oAuthUserInfo = new GoogleOAuthUserInfo(oAuth2User.getAttributes());
+        } else if (provider.equals("naver")) {
+            oAuthUserInfo = new NaverOAuthUserInfo((Map<String, Object>) oAuth2User.getAttribute("response"));
+        }
+        String providerId = oAuthUserInfo.getProviderId();
+        String email = oAuthUserInfo.getEmail();
+        String nickname = oAuthUserInfo.getName();
         String username = provider + "_" + providerId;
         String password = "ocj5df!983@5f";
 
@@ -122,13 +222,13 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         Member member;
 
         if (byUsername.isEmpty()) {
-            member = new Member(username, password, email, nickname, passwordEncoder);
+            member = new Member(username, password, email, nickname, Role.USER, passwordEncoder);
             memberRepository.save(member);
         } else {
             member = byUsername.get();
         }
 
-        MemberDetails memberDetails = new MemberDetails(member, oAuth2User.getAttributes());
+        MemberDetails memberDetails = new MemberDetails(member, oAuthUserInfo);
 
         return memberDetails;
     }
@@ -144,3 +244,4 @@ public String index(@AuthenticationPrincipal MemberDetails memberDetails) {
 }
 ```
 * 스프링은 spring oauth-client를 사용하면 위의 workflow의 1에서 5까지의 과정을 전부 자동화해준다. 나는 access token을 받은 후의 로직과 인증된 사용자에대한 로직만 짜면 된다.
+* spring oauth-client에 구글이나 페이스북 같은 것들은 provider로 등록이 되어있지만 네이버나 카카오같은 것들은 provider로 등록이 되어있지 않다. 따라서 oauth 설정 시 부가적인 것들을 좀 더 설정해줘야 한다.

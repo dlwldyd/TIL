@@ -192,7 +192,7 @@ public class RabbitConfig {
         return rabbitTemplate;
     }
 
-    // 여러 큐의 메세지를 받아와야하는 (AOP 같은)메세지 리스너는 MessageListenerContainer 를 통해 등록하는 것이 좋다.
+    // 여러 큐의 메세지를 받아와야하는 메세지 리스너는 MessageListenerContainer 를 통해 등록하는 것이 좋다.
     @Bean
     public SimpleMessageListenerContainer container(){
         SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
