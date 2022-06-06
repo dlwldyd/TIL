@@ -321,3 +321,106 @@ export default ChatForm;
   2. 서버에서는 해당 routing key를 처리하는 메세지 핸들러가 해당 메세지를 받아 ApplicationDestinationPrefix를 exchange 이름으로 바꾼 후 브로커 채널에 내려보낸다.
   3. 메세지 브로커는 binding에 따라 해당 메세지를 queue에 넣는다.(정확히는 메세지전체를 넣는게 아니라 참조만 넣는다.)
   4. queue에 저장된 메세지는 해당 queue를 구독하는 consumer에게 전달된다.
+## ChannelInterceptor
+```java
+@Component
+@RequiredArgsConstructor
+public class StompHandler implements ChannelInterceptor {
+
+    // 메세지를 브로커 채널에 내려보내기 전에 실행되는 메서드
+    @Override
+    public Message<?> preSend(Message<?> message, MessageChannel channel) {
+        
+        ...
+
+        return ChannelInterceptor.super.preSend(message, channel);
+    }
+
+    // 메세지를 브로커 채널에 내려보낸 후에 실행되는 메서드
+    @Override
+    public void postSend(Message<?> message, MessageChannel channel, boolean sent) {
+
+        ...
+
+        ChannelInterceptor.super.postSend(message, channel, sent);
+    }
+
+    // 메세지를 브로커 채널에 내려보낸 후에 실행되는 메서드, postSend와의 차이점은 예외가 터지든 말든 무조건 실행됨
+    @Override
+    public void afterSendCompletion(Message<?> message, MessageChannel channel, boolean sent, Exception ex) {
+
+        ...
+
+        ChannelInterceptor.super.afterSendCompletion(message, channel, sent, ex);
+    }
+
+    @Override
+    public boolean preReceive(MessageChannel channel) {
+
+        ...
+
+        return ChannelInterceptor.super.preReceive(channel);
+    }
+
+    @Override
+    public Message<?> postReceive(Message<?> message, MessageChannel channel) {
+
+        ...
+
+        return ChannelInterceptor.super.postReceive(message, channel);
+    }
+
+    @Override
+    public void afterReceiveCompletion(Message<?> message, MessageChannel channel, Exception ex) {
+
+        ...
+
+        ChannelInterceptor.super.afterReceiveCompletion(message, channel, ex);
+    }
+}
+```
+```java
+@Configuration
+@EnableWebSocketMessageBroker
+@RequiredArgsConstructor
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+    private final ChannelInterceptor channelInterceptor;
+
+    ...
+
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(channelInterceptor);
+    }
+}
+```
+* stomp 메세지를 인터셉트하여 추가적인 작업을 할 수 있다.
+* message.getHeaders().get("헤더이름") 으로 헤더에 접근 할 수 있지만 StompHeaderAccessor를 이용하여 더 쉽게 헤더에 접근할 수 있다. ex) StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message), accessor.getCommand()
+## MessageConverter
+```java
+@Bean
+public MessageConverter messageConverter() {
+    List<MessageConverter> messageConverters =new ArrayList<>();
+    return new CompositeMessageConverter(Arrays.asList(new MappingJackson2MessageConverter()));
+}
+```
+```java
+@Component
+@RequiredArgsConstructor
+public class StompHandler implements ChannelInterceptor {
+
+    private final MessageConverter messageConverter;
+
+    @Override
+    public Message<?> preSend(Message<?> message, MessageChannel channel) {
+
+        // messageConverter를 이용한 payload 변환
+        ChatDto chatDto = (ChatDto) messageConverter.fromMessage(message, ChatDto.class);
+
+        return ChannelInterceptor.super.preSend(message, channel);
+    }
+}
+```
+* ChannelInterceptor의 메서드를 오버라이드 했을 때 파라미터로 받는 Message<?>는 페이로드가 바이트코드이다. message.getPayload()를 해도 이상한 값이 받아진다. 이러한 페이로드를 내가 핸들링 하기 위해서는 MessageConverter를 이용해 페이로드를 변환해야한다.
+* CompositeMessageConverter를 MessageConverter로 등록하고 내가 변환하기 원하는 MessageConverter의 구현체들을 넣어준다.(https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/messaging/converter/MessageConverter.html) 그리고 MessageConverter 구현체가 들어간 collection을 순회하면서 내가원하는 객체로 변환이 가능하면 해당 객체로 변환해 반환하고 아니면 null을 반환한다.
