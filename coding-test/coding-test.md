@@ -1,4 +1,66 @@
 # 코딩테스트
+## 유니온 파인드
+```c++
+#include <bits/stdc++.h>
+
+using namespace std;
+
+//노드의 parent를 구하는 함수
+int find_par(int node, vector<int> &parent) {
+    if(parent[node] == node) {
+        return node;
+    }
+    parent[node] = find_par(parent[node], parent);
+    return parent[node];
+}
+
+//노드 집합을 합하는 함수
+//각 집합의 루트 노드를 하나로 합침
+void join(int node1, int node2, vector<int> &parent) {
+    int node1_par = find_par(node1, parent);
+    int node2_par = find_par(node2, parent);
+    if(node1_par == node2_par) {
+        return;
+    } else if(node1_par > node2_par) {
+        parent[node1_par] = node2_par;
+    } else {
+        parent[node2_par] = node1_par;
+    }
+}
+
+int main() {
+    
+    cin.tie(NULL);
+    cout.tie(NULL);
+    ios::sync_with_stdio(false);
+
+    int n, m, node1, node2; // n : 노드의 개수, m : 간선의 개수
+    cin >> n >> m;
+    vector<int> parent(n, 0);
+    for(int i=0; i<n; i++) {
+        parent[i] = i;
+    }
+    for(int i=1; i<=m; i++) {
+        cin >> node1 >> node2;
+        int node1_par = find_par(node1, parent);
+        int node2_par = find_par(node2, parent);
+        // i번째 간선에서 순환이 발생하면 출력함
+        if(node1_par == node2_par) {
+            cout << i;
+            break;
+        } else {
+            join(node1, node2, parent);
+        }
+        //순환이 없으면 0을 출력
+        if(i == m) {
+            cout << 0;
+        }
+    }
+    return 0;
+}
+```
+* 크루스컬 알고리즘의 유니온 파인드를 사용하는 대표적인 알고리즘임
+* 그래프에서 노드가 연결되어있는지를 알고싶을 때 parent에 노드의 루트 노드를 저장해서 루트 노드가 같은 노드는 연결되어 있다는 것을 알 수 있음
 ## 벨만 포드 알고리즘
 ```c++
 int n, m, a, b, c;
@@ -73,6 +135,7 @@ using namespace std;
 
 int main() {    
 
+    //n : 전체 수열의 길이
     int n, num, left = 0, right = 1, result = (left+right)/2;
     cin >> n;
     vector<int> v(1, 0); // 인덱스는 부분 수열의 길이, 값은 해당 길이의 부분 수열중 마지막 값이 가장 작은 수열의 마지막 값
@@ -132,10 +195,10 @@ cout << a;
 3. 이 과정을 계속 반복한다.
 ## 배낭 문제 알고리즘
 ```c++
-int n, k;
+int n, k; // n : 물건의 개수, k : 가방 용량
 cin >> n >> k;
 int dp[n+1][k+1];
-int w, v;
+int w, v; // w : 무게, v : 가치
 memset(dp[0], 0, (k+1)*sizeof(int));
 for(int i=0; i<n+1; i++) {
     dp[i][0] = 0;
@@ -295,6 +358,54 @@ int main() {
 <img src="./../img/Fibonacci.png">
 
 * n번째 피보나치 수는 행렬을 이용해 O(logN)시간 안에 구할 수 있다.
+## 트리의 지름
+```c++
+void dfs(int cur, int dist, vector<vector<pair<int, int>>> &graph, vector<bool> &visited) {
+    visited[cur] = true;
+    if(dist > max_dist) {
+        node = cur;
+        max_dist = dist;
+    }
+    for(int i=0; i<graph[cur].size(); i++) {
+        int next = graph[cur][i].first;
+        int edge = graph[cur][i].second;
+        if(!visited[next]) {
+            dfs(next, dist+edge, graph, visited);
+        }
+    }
+    visited[cur] = false;
+}
+
+int main() {
+    
+    cin.tie(NULL);
+    cout.tie(NULL);
+    ios::sync_with_stdio(false);
+
+    int v;
+    cin >> v;
+    vector<vector<pair<int, int>>> graph(v+1, vector<pair<int, int>>());
+    vector<bool> visited(v+1, false);
+    for(int i=0; i<v; i++) {
+        int cur, node, dist;
+        cin >> cur;
+        while(1) {
+            cin >> node;
+            if(node == -1) {
+                break;
+            }
+            cin >> dist;
+            graph[cur].push_back(make_pair(node, dist));
+        }
+    }
+    dfs(1, 0, graph, visited);
+    max_dist = 0;
+    dfs(node, 0, graph, visited);
+    cout << max_dist;
+}
+```
+* 트리의 지름이란 트리의 임의의 두 점 사이의 거리 중 가장 긴 것을 말한다.
+* 트리에서 임의의 정점을 정한 다음 해당 정점에서 가장 먼 정점(정점 A)을 dfs로 구한다. 그리고 그렇게 구한 정점 A에서 dfs로 가장 먼 정점(정점 B)과 그 정점 까지의 거리를 구하면 정점 A와 정점 B 간의 거리가 트리의 지름이 된다.
 ## 구현
 ### 각 자리수의 값 구하기
 ```c++
