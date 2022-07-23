@@ -221,5 +221,6 @@ function VideoChat() {
 
 }
 ```
-* useParams를 통해 쿼리스트링 값을 불러올 수 있다.
+* useParams를 통해 path variable을 불러올 수 있다.
 * 노출되면 안되는 데이터는 useParams를 사용하기 보다는 useLocation을 사용하는 것이 좋다.
+* 쿼리스트링은 useParams가 아닌 queryString.parse(window.location.search)를 사용해 객체형태로 불러올 수 있다.

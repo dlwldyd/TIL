@@ -102,3 +102,36 @@ function Detail() {
 }
 ```
 * useParams()를 사용하면 url에서 PathVariable을 추출할 수 있다. 이때 변수 명은 `<Route path="/movie/:id">`에서 지정한 변수명으로 해야한다.
+## Redirect 하기
+```javascript
+function App() {
+  
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home/>} />
+        <Route path='/login' element={<Login/>} />
+        <Route path='/fetch' element={<FetchMemberInfo/>} />
+        <Route path='/video-chat' element={<ValidateAuth element={<VideoChat />} />} />
+        <Route path='/search' element={<ValidateAuth element={<SearchRoom />} />} />
+      </Routes>
+    </Router>
+  );
+}
+```
+```javascript
+interface ValidateAuthProps {
+    element: JSX.Element;
+}
+
+function ValidateAuth({element: Element}: ValidateAuthProps): JSX.Element {
+    
+    if(sessionStorage.getItem("authenticated") === "true") {
+        return Element;
+    }
+    return <Navigate replace to="/login" />;
+}
+
+export default ValidateAuth;
+```
+* <Navigate> 를 사용해 원래 조건에 따라 원래 url이 아닌 다른 url로 redirect 할 수 있다.
