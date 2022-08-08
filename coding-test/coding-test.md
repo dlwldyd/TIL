@@ -1,4 +1,132 @@
 # 코딩테스트
+## KMP 알고리즘
+```c++
+#include <bits/stdc++.h>
+
+using namespace std;
+
+vector<int> getPi(string p) {
+    
+
+    // pi[n] -> p.substr(0, n)의 접미사와 접두사가 일치하는 문자열의 최장 길이
+    // ex) abcabcd 에서 pi[6] = 3(abcabc에서 접두사가 abc이고 접미사가 abc일 때 가장 길다), pi[7] = 0(abcabcd에서 접두사와 접미사가 일치하는 경우가 없다)
+    // 접두사와 접미사가 자기자신일 때는 포함하지 않는다.
+    vector<int> pi(p.size() + 1, 0);
+
+    // 접두사와 접미사가 자기자신일 때는 포함하지 않으므로 begin을 1부터 시작한다.
+    int begin = 1, matched = 0;
+
+    // 반복문이 돌 때마다 (begin + matched)가 1씩 증가하면서 pi[begin + matched]를 확정한다.
+    // begin + matched가 p.size() 보다 같거나 커지면 begin[begin+matched]
+    while(begin + matched < p.size()) {
+
+        // p[begin + matched] -> 접미사, p[matched] -> 접두사
+        // 접미사, 접두사 길이가 matched이고 접미사의 사직 지점이 begin 일 때 접미사와 접두사가 일치하는 경우
+        if(p[begin + matched] == p[matched]) {
+            matched++;
+            pi[begin + matched] = matched;
+        // 일치하지 않는 경우
+        } else {
+            // 접두사와 접미사가 일치하지 않는데 일치하는 문자의 개수가 0일 경우
+            if(matched == 0) {
+                begin++;
+            // 그렇지 않을 경우
+            // ex) abaabad에서 begin이 3이고 matched가 3이면 일 때 아래처럼 옮겨야함(pi[3] = 1)
+            // abaabad           =>    abaabad
+            //    abaabad        =>         abaabad
+            } else {
+                begin += matched - pi[matched];
+                matched = pi[matched];
+            }
+        }
+    }
+    
+    return pi;
+}
+
+// s : source, p : source에서 찾으려는 부분 문자열
+vector<int> kmp_search(string s, string p) {
+
+    // 부분문자열이 p인 인덱스가 들어감
+    vector<int> idx;
+    // pi[n] -> p.substr(0, n)의 접미사와 접두사가 일치하는 문자열의 최장 길이
+    vector<int> pi = getPi(p);
+
+    // begin -> 문자열 비교 시작지점, matched -> 일치하는 문자의 개수
+    int begin = 0, matched = 0;
+
+    // begin + p.size()가 s.size()보다 커지면 인덱스 begin보다 큰 곳에서부터는 부분 문자열 p가 존재할 수 없다
+    while(begin + p.size() <= s.size()) {
+        // s[begin] 부터 matched개 까지 문자가 일치하면
+        if(s[begin+matched] == p[matched]) {
+            matched++;
+
+            // s[begin] 부터 s.size()개 까지 문자가 일치하면 인덱스 begin에서 부분 문자열 p가 존재한다.
+            if(matched == p.size()) {
+                idx.push_back(begin);
+                matched = pi[matched];
+                begin += matched - pi[matched];
+            }
+        } else {
+            
+            // s[begin]부터 일치하는 문자의 개수가 0개면
+            if(matched == 0) {
+                begin++;
+            // 그렇지 않을 경우
+            // ex) abaabad에서 begin이 3이고 matched가 3이면 일 때 아래처럼 옮겨야함(pi[3] = 1)
+            // abaabad           =>    abaabad
+            //    abaabad        =>         abaabad
+            } else {
+                begin += matched - pi[matched];
+                matched = pi[matched];
+            }
+        }
+    }
+    
+    return idx;
+}
+
+int main(){
+
+    cin.tie(NULL);
+    cout.tie(NULL);
+    ios::sync_with_stdio(false);
+
+    // s : source, p : source에서 찾으려는 부분 문자열
+    string s, p;
+    cin >> s >> p;
+    vector<int> v = kmp_search(s, p);
+    for(int i=0; i<v.size(); i++) {
+        cout << v[i] << "\n";
+    }
+    return 0;
+}
+```
+```c++
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main(){
+
+    cin.tie(NULL);
+    cout.tie(NULL);
+    ios::sync_with_stdio(false);
+
+    string s, p;
+    cin >> s >> p;
+
+    // 부분문자열이 존재하는 경우 1 출력 없으면 0 출력
+    if(strstr(s.c_str(), p.c_str()) == NULL) {
+        cout << 0;
+    } else {
+        cout << 1;
+    }
+    return 0;
+}
+```
+* 길이 N인 문자열에서 길이가 M인 문자열을 탐색하는 경우 일반적인 문자열 탐색에서는 시간복잡도가 O(N*M)이지만 KMP 알고리즘을 사용하면 시간복잡도가 O(N+M)이다.
+* <cstring>의 char* strstr(char* string, char* search) 를 사용해도 O(N+M)의 시간복잡도로 문자열을 탐색할 수 있다.
 ## 유니온 파인드
 ```c++
 #include <bits/stdc++.h>
