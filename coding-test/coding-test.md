@@ -1,4 +1,69 @@
 # 코딩테스트
+## TSP 알고리즘
+```c++
+#include <bits/stdc++.h>
+#define INF 1000000000
+#define UNKNOWN 2000000000
+
+using namespace std;
+
+int n; // 노드의 개수
+
+// cur : 현재 노드, state : 지금까지 지나온 노드가 비트필드로 표현됨, dp : 남은 경로의 최소값이 저장된 배열, w : 노드 간 거리
+// 현재 노드가 cur 이고, 지나온 노드가 state일 때 남은 거리의 최소값이 반환됨
+int tsp(int cur, int state, vector<vector<int>> &dp, vector<vector<int>> &w) {
+    if(dp[state][cur] != UNKNOWN) { // 이미 구해진 값이 있으면 리턴함
+        return dp[state][cur];
+    }
+    if(state == (1<<n)-1) { // 모든 노드를 방문했다면 현재노드에서 시작노드(0번 노드)로 가기만 하면 되기 때문에 w[cur][0]를 리턴함
+        dp[state][cur] = w[cur][0];
+        return w[cur][0];
+    }
+    for(int i=0; i<n; i++) {
+        if(w[cur][i] == INF) { // cur 에서 i로 연결되어있지 않을 때
+            // UNKNOWN 일 경우에는 INF가 되고, 이미 구해진 값이 있으면 고려할 필요 없음
+            dp[state][cur] = min(dp[state][cur], INF);
+            continue;
+        }
+        if((state & 1<<i) == 1<<i) { // 이미 지나온 노드일 경우에는 고려할 필요 없음
+            continue;
+        }
+        int nstate = (state | 1<<i);
+        int remain = tsp(i, nstate, dp, w);
+        if(remain == INF) {
+            // 이미 구해진 값이 있으면 고려할 필요 없음
+            dp[state][cur] = min(dp[state][cur], remain);
+            continue;
+        }
+        dp[state][cur] = min(dp[state][cur], w[cur][i] + remain);
+    }
+    return dp[state][cur];
+}
+
+int main() {
+
+    cin.tie(NULL);
+    cout.tie(NULL);
+    ios::sync_with_stdio(false);
+
+    cin >> n;
+    vector<vector<int>> dp(1<<n, vector<int>(n, UNKNOWN)); // dp[i][j]에 저장된 값은 i에 해당하는 노드를 지나 j에 도달했을 때 남은 모든 노드를 지나 출발점으로 되돌아오는 경로의 최소값이 저장된다.
+    vector<vector<int>> w(n, vector<int>(n)); // w[i][j]는 i에서 j로가는 경로의 길이이다.
+    for(int i=0; i<n; i++) {
+        for(int j=0; j<n; j++) {
+            cin >> w[i][j];
+            if(w[i][j] == 0) { // w[i][j]가 0일 때는 i에서 j로 갈 수가 없는 경우이지만 헷갈릴 것 같아 INF로 바꿈
+                w[i][j] = INF;
+            }
+        }
+    }
+    // 어떤 노드에서 시작하든 같은 값을 가지므로 모든 노드에 대해 검사할 필요 없다.(원형으로 순환하기 때문에)
+    cout << tsp(0, 1, dp, w);
+	return 0;
+}
+```
+* 한 노드에서 출발해서 다른 모든 노드를 거쳐서 자기 자신으로 돌아오는 경로 중 가장 짧은 경로의 길이를 구하는 알고리즘이다. 만약 노드의 개수가 n개라면 일반적인 순열을 사용한다면 시간복잡도가 O(n!)이 되지만 TSP 알고리즘을 사용하면 시간복잡도가 O(2^n)이 된다.
+* TSP 알고리즘은 비트필드를 이용한 dp 문제인데 dp에 넣는 값을 지금까지 진행한 경로의 길이를 넣는게 아니라 앞으로 가야할 경로의 길이를 넣어야 한다. 예를 들면 n개의 노드가 있을 때 dp[1<<n][n] 에서 첫번째 인자는 지금까지 지나간 노드를 비트필드로 나타낸 것이고, n은 현재 어느 위치에 위치해 있는지이다. 그리고 dp[i][j]에 저장된 값은 i에 해당하는 노드를 지나 j에 도달했을 때 남은 모든 노드를 지나 출발점으로 되돌아오는 경로의 최소값이 저장된다.
 ## KMP 알고리즘
 ```c++
 #include <bits/stdc++.h>
