@@ -130,7 +130,7 @@ vector<int> kmp_search(string s, string p) {
             if(matched == p.size()) {
                 idx.push_back(begin);
                 matched = pi[matched];
-                begin += matched - pi[matched];
+                begin += p.size() - pi[matched];
             }
         } else {
             
