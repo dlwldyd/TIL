@@ -1,4 +1,164 @@
 # 코딩테스트
+## 희소 배열
+```java
+// 백준 17435
+#include <bits/stdc++.h>
+// 그래프에서 노드의 개수
+#define SIZE 500000
+
+using namespace std;
+
+// x 번 노드에서 n 번 이동하였을 때 도착하는 노드를 반환하는 함수
+int search(int n, int x, vector<vector<int>> &sparse_table) {
+    int result = x;
+    for(int i=1, j=0; i<=n; i<<=1, j++) {
+        if((i&n) == i) {
+            result = sparse_table[j][result];
+        }
+    }
+    return result;
+}
+
+int main() {
+
+    cin.tie(NULL);
+    cout.tie(NULL);
+    ios::sync_with_stdio(false);
+    
+    int m, q, n, x;
+    // 쿼리의 개수
+    cin >> m;
+    int log_size = (int)log2(SIZE);
+    // 테이블에서 y 행 x 열은 x번 노드에서 2^y번 이동하였을 때 도착하는 노드이다.
+    vector<vector<int>> sparse_table(log_size+1, vector<int>(m+1));
+    for(int i=1; i<=m; i++) {
+        // i 번 노드에서 1번 이동하였을 때 도착하는 노드를 먼저 초기화 한다.
+        cin >> sparse_table[0][i];
+    }
+    for(int i=1; i<log_size+1; i++) {
+        for(int j=1; j<=m; j++) {
+            //j 번 노드에서 2^i 번 이동하였을 때 도착하는 노드는 j 번 노드에서 2^(i-1) 번 이동한 노드에서 다시 2^(i-1) 번 이동한 노드이다.
+            int next = sparse_table[i-1][j];
+            sparse_table[i][j] = sparse_table[i-1][next];
+        }
+    }
+    cin >> q;
+    for(int i=0; i<q; i++) {
+        cin >> n >> x;
+        cout << search(n, x, sparse_table) << "\n";
+    }
+	return 0;
+}
+```
+* 희소배열을 사용하려면 어떤 노드에서 이동할 때 어느 노드로 이동할 지 명확해야 한다.(트리에서 무조건 부모 노드로 가는 경우 등)
+* dp + 분할정복을 사용했다 할 수 있다.
+## LCA 알고리즘(희소배열 사용)
+```java
+// 백준 11438
+#include <bits/stdc++.h>
+
+using namespace std;
+
+// src 노드에서 dist 만큼 떨어진 부모 노드를 찾는 함수
+int get_ancestor(int dist, int src, vector<vector<int>> &sparse_table) {    
+    for(int i=1, j=0; i<=dist; i<<=1, j++) {
+        if((dist&i) == i) {
+            src = sparse_table[j][src];
+        }
+    }
+    return src;
+}
+
+// 최소 공통 조상을 찾는 함수
+int find_lca(int a, int b, vector<int> &depth, vector<vector<int>> &sparse_table) {
+
+    // 만약 두 노드의 깊이가 다르면 같게 맞춰준다.
+    int sub = max(depth[a], depth[b]) - min(depth[a], depth[b]);
+    if(depth[a] > depth[b]) {
+        a = get_ancestor(sub, a, sparse_table);
+    } else {
+        b = get_ancestor(sub, b, sparse_table);
+    }
+
+    // 최소공통조상이 a와 b 노드에서 101101(2진법) 만큼 떨어진 노드라 가정하면 아래의 로직에서 a 와 b 는 (101101 - 000001 = 101100) 만큼 떨어진 노드로 바뀐다.
+    for(int j=sparse_table.size()-1; j>=0; j--) {
+        if(sparse_table[j][a] != sparse_table[j][b]) {
+            a = sparse_table[j][a];
+            b = sparse_table[j][b];
+        }
+    }
+
+    // 만약 a 나 b 중 어느 한 노드의 조상이 다른 노드라면 깊이를 맞춰주는 과정에서 a == b 가 됐을 것이다.
+    if(a == b) {
+        return a;
+    } else {
+        // a 와 b가 원래의 a, b에서 101100만큼 떨어진 노드로 바뀌었기 때문에 1번 더 움직이면 101101만큼 떨어진 노드(최소공통조상 노드)가 된다.
+        return sparse_table[0][a];
+    }
+}
+
+int main() {
+
+    cin.tie(NULL);
+    cout.tie(NULL);
+    ios::sync_with_stdio(false);
+    
+    // n : 노드의 개수
+    // m : 공통조상을 알고 싶은 노드 쌍의 개수
+    // a, b : 노드 쌍
+    int n, m, a, b;
+    cin >> n;
+    vector<vector<int>> graph(n+1, vector<int>());
+    vector<int> depth(n+1, -1);
+    vector<vector<int>> sparse_table((int)log2(n)+1, vector<int>(n+1));
+    for(int i=0; i<n+1; i++) {
+        sparse_table[0][i] = i;
+    }
+    queue<int> q;
+    for(int i=0; i<n-1; i++) {
+        cin >> a >> b;
+        graph[a].push_back(b);
+        graph[b].push_back(a);
+    }
+
+    //sparse_table 초기화
+    q.push(1);
+    depth[1] = 0;
+    int dist = 1
+    while(!q.empty()) {
+        int size = q.size();
+        for(int i=0; i<size; i++) {
+            int cur = q.front();
+            q.pop();
+            for(int j=0; j<graph[cur].size(); j++) {
+                int next = graph[cur][j];
+                if(depth[next] == -1) {
+                    sparse_table[0][next] = cur;
+                    depth[next] = dist;
+                    q.push(next);
+                }
+            }
+        }
+        dist++;
+    }
+    for(int i=1; i<=(int)log2(n); i++) {
+        for(int j=1; j<=n; j++) {
+            int next = sparse_table[i-1][j];
+            sparse_table[i][j] = sparse_table[i-1][next];
+        }
+    }
+
+
+    cin >> m;
+    for(int i=0; i<m; i++) {
+        cin >> a >> b;
+        cout << find_lca(a, b, depth, sparse_table) << "\n";
+    }
+	return 0;
+}
+```
+* 최소공통조상을 구하기 위해서는 두 노드의 깊이를 같게 맞춰준 다음에 각 노드에서 한 번씩 부모노드로 올리면서 해당 부모노드가 같은 부모노드인지 비교할 필요가 있다.
+* 만약 한 번씩 올리면서 비교하면 O(N)만큼 시간이 걸리기 때문에 희소배열을 사용한다면 O(logN)만에 최소공통조상을 구할 수 있다.
 ## TSP 알고리즘
 ```c++
 #include <bits/stdc++.h>
@@ -599,6 +759,93 @@ int main() {
 ```
 * 트리의 지름이란 트리의 임의의 두 점 사이의 거리 중 가장 긴 것을 말한다.
 * 트리에서 임의의 정점을 정한 다음 해당 정점에서 가장 먼 정점(정점 A)을 dfs로 구한다. 그리고 그렇게 구한 정점 A에서 dfs로 가장 먼 정점(정점 B)과 그 정점 까지의 거리를 구하면 정점 A와 정점 B 간의 거리가 트리의 지름이 된다.
+## Trie 자료구조, 클래스 만들어 사용하기
+```java
+// 백준 5670
+#include <bits/stdc++.h>
+
+using namespace std;
+
+class node {
+    public:
+        // leaf node 이면 finish = true
+        // root node 이면 is_root = true
+        bool finish, is_root;
+        // child_num : 현재 노드의 자식 노드의 개수
+        // pass : 현재 노드를 지나가는 단어의 개수
+        int pass, child_num;
+        map<char, node*> child;
+
+        node() : finish(false), is_root(false), pass(0), child_num(0) {}
+
+        // 소멸자 필수
+        ~node() {
+            for(auto c : child) {
+                delete c.second;
+            }
+        }
+
+        // 자식 노드를 추가하는 메서드
+        void insert(string &s, int idx) {
+            if(child.find(s[idx]) == child.end()) {
+                child[s[idx]] = new node();
+                child_num++;
+            }
+            child[s[idx]]->pass++;
+            if(idx+1 < s.size()) {
+                child[s[idx]]->insert(s, idx+1);
+            } else {
+                child[s[idx]]->finish = true;
+            }
+        }
+
+        int count(node* parent) {
+            int cnt = 0;
+            if(parent != nullptr && (parent->is_root || parent->child_num > 1 || parent->finish)) {
+                cnt += pass;
+            }
+            for(auto c : child) {
+                cnt += c.second->count(this);
+            }
+            return cnt;
+        }
+};
+
+int main() {
+
+    cin.tie(NULL);
+    cout.tie(NULL);
+    ios::sync_with_stdio(false);
+    
+    cout << fixed;
+    cout.precision(2);
+
+    while(1) {
+        int n;
+        cin >> n;
+        if(cin.eof()) {
+            break;
+        }
+        string s;
+        
+        node* root = new node();
+        root->is_root = true;
+        for(int i=0; i<n; i++) {
+            cin >> s;
+            root->insert(s, 0);
+        }
+        cout << round(root->count(nullptr) / (float)n * 100) / 100.0f << "\n";
+
+
+        // 다 썼으면 delete
+        delete root;
+    }
+	return 0;
+}
+```
+* 트라이 자료구조에서 루트 노드는 빈 노드로 만들고 아래서부터 시작하자
+* 제네릭으로 내가 만든 클래스를 사용하려면 포인터로 만들자 그래야지 nullptr로 초기화 가능하다.
+* __클래스를 만들어 사용할 때 클래스 내에 내가 만든 클래스의 객체를 가지고 있다면 소멸자를 반드시 만들자 그리고 해당 객체를 다 썼으면 반드시 delete__
 ## 구현
 ### 각 자리수의 값 구하기
 ```c++
