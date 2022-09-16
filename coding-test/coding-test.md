@@ -1,6 +1,106 @@
 # 코딩테스트
+## SCC 추출 알고리즘(타잔 알고리즘)
+```c++
+// 백준 2150
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int cnt = 0;
+vector<vector<int>> result;
+stack<int> st;
+
+bool cmp(vector<int> a, vector<int> b) {
+    return a[0] < b[0];
+}
+
+// 타잔 알고리즘은 dfs로 구현
+int dfs(int cur, vector<int> &order, vector<vector<int>> &graph, vector<bool> &scc) {
+    // dfs를 진행하면서 현재 노드 번호를 스택에 쌓는다.
+    st.push(cur);
+    // order에는 현재 노드를 몇번째로 방문하는지를 저장한다. 
+    // 그리고 parent에도 몇 번째로 방문했는지를 저장하고 만약 자기보다 먼저 방문했던 노드로 순환한다면 그 노드의 방문순서로 초기화 한다.
+    order[cur] = ++cnt;
+    int parent = cnt;
+
+    for(int i=0; i<graph[cur].size(); i++) {
+        int next = graph[cur][i];
+        // 방문했던적이 없는 노드라면 dfs를 돌고, 만약 다음노드에서 자기보다 먼저 방문했던 노드로 순환하는 경우가 있다면 해당 방문 순서로 parent를 초기화 한다.
+        if(order[next] == -1) {
+            parent = min(parent, dfs(next, order, graph, scc));
+        // 방문한 적은 있지만 scc가 확정되지 않은 노드라면 다음 노드의 방문순서와 현재 노드의 방문순서중 먼저 방문한 노드로 parent를 초기화 한다.
+        } else if(!scc[next]) {
+            parent = min(parent, order[next]);
+        }
+    }
+    
+    // 만약 위의 로직을 다 실행하고도 현재 노드의 방문순서가 바뀌지 않았다면 현재 노드부터 위에 쌓여있는 모든 노드는 scc로 묶인다.
+    // 만약 스택에 현재 노드 위에 있는 노드에서 현재노드로 순환하는 경우가 있다면 당연히 scc일테고
+    // 현재 노드이전에 방문했던 노드로 순환하는 경우라면 현재노드의 방문순서가 바뀌었을 것이고
+    // 현재 노드이후에 방문했던 노드로 순환하는 경우라면 이미 스택에서 pop 되어서 scc로 확정이 됐을 것이다.
+    if(parent == order[cur]) {
+        // tmp에는 하나의 scc로 묶인 노드 번호가 들어간다.
+        vector<int> tmp;
+        while(1) {
+            int top = st.top();
+            st.pop();
+            tmp.push_back(top);
+            scc[top] = true;
+            // 현재 노드가 될 때까지 스택에서 pop한다.
+            if(top == cur) {
+                break;
+            }
+        }
+
+        // 백준문제에서 정렬하라고해서 넣은 부분
+        sort(tmp.begin(), tmp.end());
+        // 백준문제에서 -1을 넣어라해서 넣은 부분
+        tmp.push_back(-1);
+
+        result.push_back(tmp);
+    }
+    return parent;
+}
+
+int main() {
+    
+    ios::sync_with_stdio(false);
+	cin.tie(NULL);
+    cout.tie(NULL);
+    
+    int v, e, a, b;
+    cin >> v >> e;
+    vector<vector<int>> graph(v+1, vector<int>());
+    vector<int> order(v+1, -1);
+    vector<bool> scc(v+1, false);
+    stack<int> st;
+    for(int i=0; i<e; i++) {
+        cin >> a >> b;
+        graph[a].push_back(b);
+    }
+
+    // 모든 노드가 연결되어있는 것은 아니기 때문에 모든 노드에 대해서 dfs를 돌려야한다.
+    for(int i=1; i<=v; i++) {
+        if(!scc[i]) {
+            dfs(i, order, graph, scc);
+        }
+    }
+    cout << result.size() << "\n";
+    sort(result.begin(), result.end(), cmp);
+    for(int i=0; i<result.size(); i++) {
+        for(int j=0; j<result[i].size(); j++) {
+            cout << result[i][j] << " ";
+        }
+        cout << "\n";
+    }
+    return 0;
+}
+```
+* 강한 연결 요소(Strongly Connected Component)는 두 노드 a, b가 a에서 b로 가는 경로도 있고, b에서 a로 가는 경우도 있을 때 그러한 노드들의 집합을 SCC라 한다.
+* scc 추출 알고리즘에는 코사라주 알고리즘이 있고 타잔 알고리즘이 있는데 코사라주 알고리즘은 역방향 그래프도 필요하고 dfs를 2번 돌려야하기 때문에 타잔 알고리즘에 비해 시간도 오래걸리고 코드도 길다. 그러니깐 타잔 알고리즘 사용하자
+* 타잔알고리즘을 사용해서 scc를 추출하면 해당 scc는 위상정렬의 역순으로 추출된다.(유향 그래프에서 dfs를 진행하면서 더 이상 dfs를 진행할 수 없는 경우에 스택에서 pop하며 scc를 추출하기 때문에)
 ## 희소 배열
-```java
+```c++
 // 백준 17435
 #include <bits/stdc++.h>
 // 그래프에서 노드의 개수
@@ -53,7 +153,7 @@ int main() {
 * 희소배열을 사용하려면 어떤 노드에서 이동할 때 어느 노드로 이동할 지 명확해야 한다.(트리에서 무조건 부모 노드로 가는 경우 등)
 * dp + 분할정복을 사용했다 할 수 있다.
 ## LCA 알고리즘(희소배열 사용)
-```java
+```c++
 // 백준 11438
 #include <bits/stdc++.h>
 
