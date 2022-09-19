@@ -99,6 +99,87 @@ int main() {
 * 강한 연결 요소(Strongly Connected Component)는 두 노드 a, b가 a에서 b로 가는 경로도 있고, b에서 a로 가는 경우도 있을 때 그러한 노드들의 집합을 SCC라 한다.
 * scc 추출 알고리즘에는 코사라주 알고리즘이 있고 타잔 알고리즘이 있는데 코사라주 알고리즘은 역방향 그래프도 필요하고 dfs를 2번 돌려야하기 때문에 타잔 알고리즘에 비해 시간도 오래걸리고 코드도 길다. 그러니깐 타잔 알고리즘 사용하자
 * 타잔알고리즘을 사용해서 scc를 추출하면 해당 scc는 위상정렬의 역순으로 추출된다.(유향 그래프에서 dfs를 진행하면서 더 이상 dfs를 진행할 수 없는 경우에 스택에서 pop하며 scc를 추출하기 때문에)
+## 2-SAT문제
+```c++
+// 백준 11280
+#include <bits/stdc++.h>
+
+using namespace std;
+
+// n : 변수의 개수, m : 절의 개수
+int n, m, cnt=0, num = 0;
+stack<int> st;
+
+// 변수의 not을 구하는 함수
+int opposite(int num) {
+    return num%2 == 1 ? num-1 : num+1;
+}
+
+// scc 추출(타잔 알고리즘)
+int dfs(int cur, vector<int> &order, vector<int> &scc_num, vector<vector<int>> &graph) {
+    st.push(cur);
+    order[cur] = ++cnt;
+    int parent = cnt;
+    for(int next : graph[cur]) {
+        if(order[next] == 0) {
+            parent = min(parent, dfs(next, order, scc_num, graph));
+        } else if(scc_num[next] == -1) {
+            parent = min(parent, order[next]);
+        }
+    }
+    if(parent == order[cur]) {
+        while(1) {
+            int top = st.top();
+            st.pop();
+            scc_num[top] = num;
+            if(top == cur) {
+                break;
+            }
+        }
+        num++;
+    }
+    return parent;
+}
+
+int main() {
+    
+    ios::sync_with_stdio(false);
+	cin.tie(NULL);
+    cout.tie(NULL);
+    
+    int a, b;
+    cin >> n >> m;
+    vector<vector<int>> graph(2*n);
+    vector<int> order(2*n, 0);
+    vector<int> scc_num(2*n, -1);
+    for(int i=0; i<m; i++) {
+        cin >> a >> b;
+        // 하나의 절은 무조건 true여야 하기 때문에 (p or q) 에서 ~p → q 이거나 ~q → p 여야 한다.
+        // 위의 명제식을 그래프의 형태로 만든다.
+        a = a < 0 ? -1*(a+1)*2 : 2*a-1;
+        b = b < 0 ? -1*(b+1)*2 : 2*b-1;
+        graph[opposite(a)].push_back(b);
+        graph[opposite(b)].push_back(a);
+    }
+    for(int i=0; i<2*n; i++) {
+        if(scc_num[i] == -1) {
+            dfs(i, order, scc_num, graph);
+        }
+    }
+    // p와 ~p가 같은 scc에 속할 경우 p → ~p이고 ~p → p 여야하므로 p가 true든 false든 2-SAT을 true로 만드는 경우가 없다.
+    // p → ~p인 경우가 존재하면 p가 false이면 된다.
+    for(int i=0; i<2*n; i++) {
+        if(scc_num[i] == scc_num[opposite(i)]) {
+            cout << 0;
+            return 0;
+        }
+    }
+    cout << 1;
+    return 0;
+}
+```
+* 2-SAT 문제는 명제식을 그래프의 형태로 만들어서 푸는 문제이다.
+* 2-SAT 문제가 뭔지는 백준 11280문제를 확인하자 참고로 절 안에 변수의 개수가 2개 일 때 2-SAT 문제라 하고, k개 일때는 k-SAT 문제라 하는데 2-SAT 문제일 때만 scc로 풀 수 있다.
 ## 희소 배열
 ```c++
 // 백준 17435
@@ -1032,7 +1113,7 @@ if(n%2 == 0) {
 ```
 * %를 사용하여 2개의 자료구조를 번갈아 가면서 사용할 수 있다.
 ### 잡다
-* `cin.eof()` : 입력의 종료 조건이 없을 때 파일 끝까지 입력받기 위해 쓰자
+* `cin.eof()` : 입력의 종료 조건이 없을 때 파일 끝까지 입력받기 위해 쓰자, `if(cin.eof()) break;`를 쓸 때 입력받은 후에 써야한다. 입력 받기 전에 쓰면 segfault
 * `cin.tie(NULL)`, `cout.tie(NULL)`, `ios::sync_with_stdio(false)` : 출력버퍼에 저장했다가 한번에 출력할 때, 입출력 속도가 빠를 필요가 있을 때 사용하자. 단, 이걸 사용하려면 `endl` 대신에 `\n`를 사용하자
 * `cout.precision(5)`, `cout << fixed` : 소수점 출력 자리수 정할 때, `cout << fixed` 사용안하면 소수점 자리수를 `cout.precision(5)`로 5로 정했다 해도 소수점 아래자리수가 0이면 출력 안함 예를 들면 0.33400 -> 0.334까지만 출력
 * 규칙적인 패턴을 가진 문양과 같은 것에 대한 문제는 수열을 가지고 쉽게 풀 수 도 있다.
