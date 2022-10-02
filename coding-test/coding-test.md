@@ -1,4 +1,213 @@
 # 코딩테스트
+## 세그먼트 트리
+```c++
+// 백준 2042
+#include <bits/stdc++.h>
+
+using namespace std;
+
+typedef long long ll;
+
+// 세그먼트 트리를 초기화 하는 함수
+ll init(vector<ll> &v, vector<ll> &tree, int cur, int start, int end) {
+    if(start == end) {
+        tree[cur] = v[start];
+        return tree[cur];
+    }
+    // init(v, tree, 2*cur, start, (start+end)/2) => 왼쪽 서브 트리
+    // init(v, tree, 2*cur+1, (start+end)/2+1, end) => 오른쪽 서브 트리
+    tree[cur] = init(v, tree, 2*cur, start, (start+end)/2) + init(v, tree, 2*cur+1, (start+end)/2+1, end);
+    return tree[cur];
+}
+
+// num번째 수를 (num번째 수 + diff)로 바꾸는 함수
+// a를 b로 바꿀 때 b - a = diff
+void change(vector<ll> &tree, ll &num, int cur, ll &diff, int start, int end) {
+    if(num < start || num > end) {
+        return;
+    }
+    tree[cur] += diff;
+    if(start == end) {
+        return;
+    }
+    change(tree, num, 2*cur, diff, start, (start+end)/2);
+    change(tree, num, 2*cur+1, diff, (start+end)/2+1, end);
+}
+
+// b 번째 수부터 c 번째 수 까지의 함을 리턴하는 함수
+ll sum(vector<ll> &tree, int cur, ll &b, ll &c, int start, int end) {
+    // b 부터 c까지의 수가 범위에 포함되지 않을 경우
+    if(start > c || end < b) {
+        return 0;
+    }
+    // b 부터 c까지의 수가 범위에 완전히 포함되는 경우
+    if(start >= b && end <= c) {
+        return tree[cur];
+    }
+    // 걸치는 경우
+    return sum(tree, 2*cur, b, c, start, (start+end)/2) + sum(tree, 2*cur+1, b, c, (start+end)/2+1, end);
+}
+
+int main() {
+    
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    
+    int n, m, k;
+    cin >> n >> m >> k;
+    vector<ll> v(n+1);
+    vector<ll> tree(1<<((int)ceil(log2(n))+1));
+    for(int i=1; i<=n; i++) {
+        cin >> v[i];
+    }
+    init(v, tree, 1, 1, n);
+    ll a, b, c;
+    for(int i=0; i<m+k; i++) {
+        cin >> a >> b >> c;
+        if(a == 1) {
+            ll diff = c-v[b];
+            v[b] = c;
+            change(tree, b, 1, diff, 1, n);
+        } else {
+            cout << sum(tree, 1, b, c, 1, n) << "\n";
+        }
+    }
+    return 0;
+}
+```
+* 세그먼트 트리는 구간 쿼리를 수행하기 위한 자료구조로써 위의 경우는 구간 합을 구하는 세그먼트 트리이다.
+* 어떤 구간 쿼리를 수행하느냐에 따라 로직을 다르게 짜야한다.
+## inversion counting
+```c++
+// 백준 1517(버블소트의 스왑 회수 구하기)
+#include <bits/stdc++.h>
+
+using namespace std;
+
+long long cnt = 0;
+
+// merge sort에서 merge
+vector<int> merge(vector<int> &a, vector<int> &b) {
+    vector<int> result;
+    int aIdx = 0, bIdx = 0;
+    while(aIdx < a.size() || bIdx < b.size()) {
+        if(aIdx >= a.size()) {
+            while(bIdx < b.size()) {
+                result.push_back(b[bIdx]);
+                bIdx++;
+            }
+        } else if(bIdx >= b.size()) {
+            while(aIdx < a.size()) {
+                result.push_back(a[aIdx]);
+                aIdx++;
+            }
+        } else {
+            if(a[aIdx] > b[bIdx]) { // 숫자가 같은 경우는 swap이 일어날 필요 없음
+
+                // 왼쪽 리스트와 오른쪽 리스트는 이미 정렬된 상태이다.
+                // 따라서 a[aIdx] > b[Idx]라면 aIdx이후의 모든 값은 b[bIdx]와 스왑되어야 한다.
+                cnt += a.size() - aIdx;
+                result.push_back(b[bIdx]);
+                bIdx++;
+            } else {
+                result.push_back(a[aIdx]);
+                aIdx++;
+            }
+        }
+    }
+    return result;
+}
+
+// merge sort
+vector<int> mergeSort(vector<int> v) {
+    if(v.size() == 1) {
+        return v;
+    }
+    vector<int> a = mergeSort(vector<int>(v.begin(), v.begin()+v.size()/2));
+    vector<int> b = mergeSort(vector<int>(v.begin()+v.size()/2, v.end()));
+    return merge(a, b);
+}
+
+int main() {
+    
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    int n;
+    cin >> n;
+    vector<int> v(n);
+    for(int i=0; i<n; i++) {
+        cin >> v[i];
+    }
+    mergeSort(v);
+    cout << cnt;
+    return 0;
+}
+```
+* inversion counting은 현재 인덱스 왼쪽에 있는 값들이 몇개나 현재 인덱스의 값보다 크거나 작은지를 구할 때 사용하는 알고리즘이다.
+## 인덱스 트리
+```c++
+// 백준 12899
+#include <bits/stdc++.h>
+#define SIZE 2000000
+
+using namespace std;
+
+// 리스트에 값 x를 add
+void insert(vector<int> &tree, int cur, int start, int end, int &x) {
+    // 트리의 각 노드에는 start 부터 end 까지의 값 리스트에 몇개 존재 하는지가 저장된다.
+    // leaf 노드는 start == end 이기 때문에 1 or 0 이 저장된다.
+    if(x < start || x > end) {
+        return;
+    }
+    tree[cur]++;
+    if(start < end) {
+        insert(tree, 2*cur, start, (start+end)/2, x);
+        insert(tree, 2*cur+1, (start+end)/2+1, end, x);
+    }
+}
+
+// 리스트에서 x번째 수를 삭제
+void remove(vector<int> &tree, int cur, int start, int end, int cnt, int &x) {
+    tree[cur]--;
+    if(start == end) {
+        // 삭제된 수를 출력
+        cout << start << "\n";
+    } else {
+        if(tree[2*cur]+cnt < x) {
+            remove(tree, 2*cur+1, (start+end)/2+1, end, tree[2*cur]+cnt, x);
+        } else {
+            remove(tree, 2*cur, start, (start+end)/2, cnt, x);
+        }
+    }
+}
+
+int main() {
+    
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    int n;
+    cin >> n;
+    vector<int> tree(1<<(int)ceil(log2(SIZE)+1), 0);
+    for(int i=0; i<n; i++) {
+        int t, x;
+        cin >> t >> x;
+        if(t == 1) {
+            insert(tree, 1, 1, SIZE, x);
+        } else {
+            remove(tree, 1, 1, SIZE, 0, x);
+        }
+    }
+
+    return 0;
+}
+```
+* 인덱스 트리는 리스트에서 n번째 수를 찾을 때 사용하는 자료구조이다.
+* 요세푸스 문제 같은 경우 원형 큐에서 n번째 수를 계속해서 찾는 문제이기 때문에 인덱스 트리를 사용할 수 있다.
 ## SCC 추출 알고리즘(타잔 알고리즘)
 ```c++
 // 백준 2150
@@ -1028,6 +1237,21 @@ int main() {
 * 제네릭으로 내가 만든 클래스를 사용하려면 포인터로 만들자 그래야지 nullptr로 초기화 가능하다.
 * __클래스를 만들어 사용할 때 클래스 내에 내가 만든 클래스의 객체를 가지고 있다면 소멸자를 반드시 만들자 그리고 해당 객체를 다 썼으면 반드시 delete__
 ## 구현
+### 2차원 배열에서 왼쪽 위부터 순회하는 것이 아니라 중간 위부터 순회할 때
+```c++
+// 프로그래머스 코딩테스트 공부
+int time[151][151];
+
+// alp 행, cop 열부터 순회하고 싶을 때
+for(int i=alp*151 + cop; i<=151*151; i++) {
+    int y = i/151; // 2차원 배열에서 row
+    int x = i%151; // 2차원 배열에서 column
+    
+    ...
+
+}
+```
+* 중간 위부터 차례대로 순회하고 싶으면 for문을 하나만 사용하자
 ### 각 자리수의 값 구하기
 ```c++
 int n = 23485;
