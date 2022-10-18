@@ -1,4 +1,199 @@
 # 코딩테스트
+## CCW 알고리즘
+```c++
+// 백준 11758
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int prod(int x1, int y1, int x2, int y2) {
+    return x1*y2 - x2*y1;
+}
+
+// x1*y2 + x2*y3 + x3*y1 - (x2*y1 + x3*y2 + x1*y3)
+// 양수일 경우 반시계방향, 음수일 경우 시계방향, 0일 경우 직선 
+int ccw(int x1, int y1, int x2, int y2, int x3, int y3) {
+    return prod(x1, y1, x2, y2) + prod(x2, y2, x3, y3) + prod(x3, y3, x1, y1);
+}
+
+int main() {
+    
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    
+    pair<int, int> p[3];
+    for(int i=0; i<3; i++) {
+        cin >> p[i].first >> p[i].second;
+    }
+    int dec = 0;
+    dec - ccw(p[0].first, p[0].second, p[1].first, p[1].second, p[2].first, p[2].second);
+    if(dec > 0) {
+        cout << 1;
+    } else if(dec == 0) {
+        cout << 0;
+    } else {
+        cout << -1;
+    }
+    return 0;
+}
+```
+* ccw 알고리즘은 세 개의 점의 시계방향, 반시계 방향을 구할 수 있는 알고리즘이다.
+## 선분 교차 판정
+```c++
+// 백준 17387
+#include <bits/stdc++.h>
+
+using namespace std;
+
+typedef long double ld;
+
+ld pro(ld x1, ld y1, ld x2, ld y2) {
+    return x1*y2 - x2*y1;
+}
+
+ld ccw(pair<ld, ld> n1, pair<ld, ld> n2, pair<ld, ld> n3) {
+    return pro(n1.first, n1.second, n2.first, n2.second) + pro(n2.first, n2.second, n3.first, n3.second) + pro(n3.first, n3.second, n1.first, n1.second);
+}
+
+void is_cross(vector<pair<ld, ld>> v1, vector<pair<ld, ld>> v2) {
+
+    //(x1, y1), (x2, y2) 가 직선 v1, (x3, y3), (x4, y4)가 직선 v2를 이루고있다.
+    double x1 = v1[0].first, y1 = v1[0].second, x2 = v1[1].first, y2 = v1[1].second, x3 = v2[0].first, y3 = v2[0].second, x4 = v2[1].first, y4 = v2[1].second;
+
+    // 이 경우가 아닐때는 교차하지 않는다.
+    // (ㅓ, +, ㅡ, ㅡ ㅡ) => ccw 곱이 음수이거나 0이 된다.
+    if(ccw(v1[0], v1[1], v2[0]) * ccw(v1[0], v1[1], v2[1]) <= 0 && ccw(v2[0], v2[1], v1[0]) * ccw(v2[0], v2[1], v1[1]) <= 0) {
+
+        // 두 값이 다 0이면 직선 v1과 v2가 일직선상에 있다.
+        if(ccw(v1[0], v1[1], v2[0]) * ccw(v1[0], v1[1], v2[1]) == 0 && ccw(v2[0], v2[1], v1[0]) * ccw(v2[0], v2[1], v1[1]) == 0) {
+            
+            // x좌표가 큰쪽이 v1[1]에 가도록 swap 했기 때문에 아래의 경우에 두 선분은 겹치게 된다.
+            if((v2[1] <= v1[1] && v2[1] >= v1[0]) || (v1[1] <= v2[1] && v1[1] >= v2[0])) {
+                cout << 1 << "\n";
+                return;
+            }
+            // 두 선분이 겹치지 않으면 교차하지 않는다.
+            cout << 0 << "\n";
+            return;
+        }
+        
+        // 두 선분이 일직선상에 있지 않으면 교차한다.
+        cout << 1 << "\n";
+        return;
+    }
+
+    // 교차하지 않는 경우
+    // (ㅡ ㅣ) => ccw(v1[0], v1[1], v2[0]) * ccw(v1[0], v1[1], v2[1])는 음수지만 ccw(v2[0], v2[1], v1[0]) * ccw(v2[0], v2[1], v1[1])는 양수가 된다.
+    cout << 0 << "\n";
+}
+
+int main() {
+
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+
+    cout << fixed;
+    cout.precision(10);
+
+    vector<pair<ld, ld>> v1(2), v2(2);
+    cin >> v1[0].first >> v1[0].second >> v1[1].first >> v1[1].second >> v2[0].first >> v2[0].second >> v2[1].first >> v2[1].second;
+    if(v1[0] > v1[1]) {
+        swap(v1[0], v1[1]);
+    }
+    if(v2[0] > v2[1]) {
+        swap(v2[0], v2[1]);
+    }
+    is_cross(v1, v2);
+    return 0;
+}
+```
+* ccw 알고리즘을 사용하여 선분교차를 판별할 수 있다. 다만 선분교차를 판별할 때 두 선분이 일직선 상에 있을 경우를 잘 생각해야한다.
+## 컨벡스 헐(그라함 스캔 알고리즘)
+```c++
+#include <bits/stdc++.h>
+
+using namespace std;
+
+pair<int, int> base;
+
+typedef long long ll;
+
+ll prod(ll x1, ll y1, ll x2, ll y2) {
+    return x1*y2 - x2*y1;
+}
+
+ll ccw(ll x1, ll y1, ll x2, ll y2, ll x3, ll y3) {
+    return prod(x1, y1, x2, y2) + prod(x2, y2, x3, y3) + prod(x3, y3, x1, y1);
+}
+
+bool cmp(pair<int, int> a, pair<int, int> b) {
+    ll x1 = base.second, y1 = base.first;
+    ll x2 = a.second, y2 = a.first;
+    ll x3 = b.second, y3 = b.first;
+    if(ccw(x1, y1, x2, y2, x3, y3) == 0) {
+        return (x1-x2)*(x1-x2) + (y1-y2)*(y1-y2) < (x1-x3)*(x1-x3) + (y1-y3)*(y1-y3);
+    }
+    return ccw(x1, y1, x2, y2, x3, y3) > 0;
+}
+
+int main() {
+    
+    ios::sync_with_stdio(false);
+    cin.tie(NULL);
+    cout.tie(NULL);
+    
+    int n;
+    cin >> n;
+    vector<pair<int, int>> pos(n);
+    for(int i=0; i<n; i++) {
+        cin >> pos[i].second >> pos[i].first;
+    }
+    // 오름차순 정렬
+    sort(pos.begin(), pos.end());
+
+    // 가장 왼쪽 아래에 있는 점을 시작으로 한다.
+    base = pos[0];
+
+    // 시작점을 기준으로 반시계 방향의 점들 순으로 정렬한다. 같은 각도에 있을 때는 거리가 가까운 점이 앞으로 온다.
+    sort(pos.begin(), pos.end(), cmp);
+    stack<int> st;
+    pair<int, int> p1 = pos[0];
+    pair<int, int> p2 = pos[1];
+    st.push(0);
+    st.push(1);
+    
+    for(int i=2; i<n; i++) {
+        while(st.size() >= 2) {
+            
+            // 스택의 가장 위에 있는 두 점을 기준으로 점 (x3, y3)가 시계방향에 있는지 반시계 방향에 있는지 판별한다.
+            int tmp = st.top();
+            ll x2 = pos[st.top()].second, y2 = pos[st.top()].first;
+            st.pop();
+            ll x1 = pos[st.top()].second, y1 = pos[st.top()].first;
+            ll x3 = pos[i].second, y3 = pos[i].first;
+
+            // 선분 (x1, y1), (x2, y2)에 대해 점 (x3, y3)가 반시계 방향에 있으면 점 (x2, y2)가 컨벡스 헐이 아닌건 아니므로(컨벡스 헐로 확정된 것은 아니다.)
+            // 점 (x2, y2)를 스택에 넣는다.
+            // 만약 점 (x3, y3)가 시계방향에 있다면 점 (x2, y2)는 컨벡스헐에 속하지 않으므로 스택에 넣지 않고 while문을 돈다.
+            if(ccw(x1, y1, x2, y2, x3, y3) > 0) {
+                st.push(tmp);
+
+                // 다음 (i+1)점을 기준으로 스택에 있는 점들이 컨벡스 헐에 속하는지 판별하기 위해 break
+                break;
+            }
+        }
+        // 인덱스 i 점이 컨벡스 헐에 속하는지를 판단하기 위해 스택에 넣어준다.
+        st.push(i);
+    }
+    cout << st.size();
+    return 0;
+}
+```
+* 그라함 스캔 알고리즘은 컨벡스 헐(볼록껍질)을 구하기 위한 알고리즘이다.
+* 컨벡스 헐(볼록껍질)이란 2차원 평면에 점들이 주어졌을 때 점을 이은 볼록다각형이 나머지 모든 점을 내부에 포함하면 그것을 컨벡스 헐(볼록 껍질)이라 한다.
+* 위의 경우는 점의 개수가 최소가 되도록 하는 볼록 다각형을 구했는데(직선상에 여러기의 점이 있을 때 가장 끝점만 포함시킴) 직선 상의 점들도 모두 포함시키고 싶다면 ccw(x1, y1, x2, y2, x3, y3) > 0를 ccw(x1, y1, x2, y2, x3, y3) >= 0로 바꾸면 된다.
 ## 세그먼트 트리
 ```c++
 // 백준 2042
