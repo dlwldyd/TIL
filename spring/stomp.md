@@ -424,3 +424,73 @@ public class StompHandler implements ChannelInterceptor {
 ```
 * ChannelInterceptor의 메서드를 오버라이드 했을 때 파라미터로 받는 Message<?>는 페이로드가 바이트코드이다. message.getPayload()를 해도 이상한 값이 받아진다. 이러한 페이로드를 내가 핸들링 하기 위해서는 MessageConverter를 이용해 페이로드를 변환해야한다.
 * CompositeMessageConverter를 MessageConverter로 등록하고 내가 변환하기 원하는 MessageConverter의 구현체들을 넣어준다.(https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/messaging/converter/MessageConverter.html) 그리고 MessageConverter 구현체가 들어간 collection을 순회하면서 내가원하는 객체로 변환이 가능하면 해당 객체로 변환해 반환하고 아니면 null을 반환한다.
+## 테스트
+```java
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class SsamusoChatApplicationTests {
+
+	@LocalServerPort
+	private int port;
+
+	private StompSession stompSession;
+
+
+	private final String url;
+
+	private BlockingQueue<IdentificationDto> queue = new LinkedBlockingDeque<>();
+
+	private final WebSocketStompClient webSocketStompClient;
+
+	public SsamusoChatApplicationTests() {
+		StandardWebSocketClient standardWebSocketClient = new StandardWebSocketClient();
+		WebSocketTransport webSocketTransport = new WebSocketTransport(standardWebSocketClient);
+		List<Transport> transports = Collections.singletonList(webSocketTransport);
+		SockJsClient sockJsClient = new SockJsClient(transports);
+		this.webSocketStompClient = new WebSocketStompClient(sockJsClient);
+		this.webSocketStompClient.setMessageConverter(new MappingJackson2MessageConverter());
+		this.url = "ws://localhost:";
+	}
+
+	@BeforeEach
+	public void connect() throws ExecutionException, InterruptedException, TimeoutException {
+		this.stompSession = this.webSocketStompClient.connect(url + port + "/stomp", new StompSessionHandlerAdapter() {
+				})
+				.get(60, TimeUnit.SECONDS);
+	}
+
+	@AfterEach
+	public void disconnect() {
+		if (this.stompSession.isConnected()) {
+			this.stompSession.disconnect();
+		}
+	}
+
+	@Test
+	void contextLoads() throws InterruptedException {
+		stompSession.subscribe("/exchange/chatting.exchange/room.1", new StompFrameHandlerImpl());
+		stompSession.send("/chatting/room.1", new IdentificationDto("username"));
+		IdentificationDto dto = queue.poll(5, TimeUnit.SECONDS);
+
+        // 위에서 new IdentificationDto("username")을 보냈기 때문에 queue에 IdentificationDto("username")가 들어있어야 한다.
+		assertThat(dto.getFrom()).isEqualTo("username");
+	}
+
+	private class StompFrameHandlerImpl implements StompFrameHandler {
+
+        // 메세지의 payload가 convert 되는 타입
+		@Override
+		public Type getPayloadType(StompHeaders headers) {
+			return IdentificationDto.class;
+		}
+
+        // 메세지를 받으면 queue에 메세지를 넣는다.
+		@Override
+		public void handleFrame(StompHeaders headers, Object payload) {
+			queue.offer((IdentificationDto) payload);
+		}
+	}
+
+}
+```
+* stomp 연결 테스트는 통합테스트로 실행, 실제 메세지 브로커에 메세지를 내려주는게 아니라 StompFrameHandler를 구현해서 내가 구성한 설정대로(exchange name, queue name, prefix 등등) 잘 동작하는지만 테스트한다.
