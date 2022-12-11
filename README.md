@@ -11,6 +11,7 @@
 * [Mockito](spring/mockito.md)
 * [FactoryBean](spring/FactoryBean.md)
 * [JDBC](spring/JDBC.md)
+* [프로파일 나누기](spring/profiles.md)
 * __DI(Dependency Injection)__
     + [DI를 사용하는 이유](spring/DI(Dependency%20Injection).md)
     + [컴포넌트 스캔에서 의존관계 주입 방법](spring/component_scan.md)
