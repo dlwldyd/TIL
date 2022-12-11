@@ -1,5 +1,7 @@
 # 웹 소켓
 ## WebSocket
+<img src="../img/websocket.png"/>
+
 ```typescript
 // 클라이언트
 import { useEffect, useRef, useState } from "react";
