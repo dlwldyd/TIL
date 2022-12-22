@@ -35,7 +35,7 @@
   + [다중 보안 설정](spring/multi-config.md)
   + [SecurityContext](spring/SecurityContext.md)
   + [Form Login 인증 처리](spring/form-login.md)
-  + [AJAX, REST API 인증 처리](spring/ajax-login.md)
+  + [JSON 포맷 인증 처리](spring/ajax-login.md)
   + [커스텀 DSL](spring/custom-dsl.md)
   + [커스텀 SecurityMetadataSource, FilterSecurityInterceptor 등록하기](spring/FilterSecurityInterceptor.md)
   + [계층 권한 적용하기](spring/role-hierarchy.md)
