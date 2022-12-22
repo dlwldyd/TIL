@@ -109,3 +109,42 @@ public class SecurityConfig {
 }
 ```
 * deprecated 후에는 스프링 빈으로 만들어주면 자동으로 해당 UserDetailsService와 AuthenticationProvider 등을 사용한다.
+# AuthenticationManager 가져오기
+## deprecated 전
+```java
+@EnableWebSecurity
+@RequiredArgsConstructor
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    ...
+
+    private AuthenticationFilter getAuthenticationFilter() throws Exception {
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter();
+        authenticationFilter.setAuthenticationManager(authenticationManagerBean());
+        return authenticationFilter;
+    }
+}
+```
+* 이전에는 WebSecurityConfigurerAdapter의 authenticationManagerBean() 메서드를 통해 AuthenticationManager를 가져왔다.
+## deprecated 후
+```java
+@EnableWebSecurity
+@RequiredArgsConstructor
+public class SecurityConfig {
+
+    ...
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    private AuthenticationFilter getAuthenticationFilter() throws Exception {
+        AuthenticationFilter authenticationFilter = new AuthenticationFilter();
+        authenticationFilter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
+        return authenticationFilter;
+    }
+}
+```
+* deprecated 후에는 스프링 빈으로 등록되어있는 AuthenticationConfiguration 객체의 getAuthenticationManager() 메서드를 호출해 가져올 수 있다.
