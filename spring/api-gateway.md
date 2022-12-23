@@ -176,6 +176,8 @@ spring:
           filters: # 필터 적용
 #            - AddRequestHeader=second-request, second-request-header
 #            - AddResponseHeader=second-response, second-response-header
+#            - RemoveRequestHeader=Cookie # HTTP 요청의 Cookie 헤더를 지워서 마이크로서비스로 보냄
+#            - RewritePath=/second-service/(?<segment>.*), /$\{segment} # api-gateway에 url이 /second-serivce/???로 들어오면 마이크로서비스로 /???로 url을 바꾸어 보냄
             - name: CustomFilter # 필터의 추가적인 정보(args 등)를 등록하고 싶으면 'name:'을 앞에 붙여줘야함
             - name: LoggingFilter
               args: # 필터의 내부 클래스(Config)에 들어있는 멤버를 초기화 한다.
