@@ -36,6 +36,7 @@
   + [SecurityContext](spring/SecurityContext.md)
   + [Form Login 인증 처리](spring/form-login.md)
   + [JSON 포맷 인증 처리](spring/ajax-login.md)
+  + [JWT 기반 인증 처리](spring/jwt-login.md)
   + [커스텀 DSL](spring/custom-dsl.md)
   + [커스텀 SecurityMetadataSource, FilterSecurityInterceptor 등록하기](spring/FilterSecurityInterceptor.md)
   + [계층 권한 적용하기](spring/role-hierarchy.md)
