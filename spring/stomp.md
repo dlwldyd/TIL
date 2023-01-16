@@ -34,12 +34,15 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 @Controller
 public class ChatController {
 
+    private final SimpMessagingTemplate template;
+
     // topic
     @MessageMapping("/room")
     // /subs 메세지 브로커에 room 토픽으로 메세지를 내림
     // 메세지가 들어올 때는 /chat/room으로 들어오지만 메세지 브로커에는 /subs/room으로 메세지를 내린다.(정확히는 브로커 채널에)
     @SendTo("/subs/room")
     public String message(String msg) {
+        // template.convertAndSend(chatExchangeName, "room." + roomId, msg);
         return msg;
     }
 }
