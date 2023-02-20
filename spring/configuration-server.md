@@ -1,4 +1,5 @@
 # Configuration Server
+## Configuration Server 생성
 <img src="../img/yml-files.png"/>
 
 * 하나의 디렉토리에 각 마이크로서비스들이 사용할 프로파일별 yml 파일들을 모아둔다.
