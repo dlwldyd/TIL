@@ -2,7 +2,6 @@
 ## Configuration Server 생성
 <img src="../img/yml-files.png"/>
 
----
 * 하나의 디렉토리에 각 마이크로서비스들이 사용할 프로파일별 yml 파일들을 모아둔다.
 * 해당 디렉토리를 git을 사용해 관리한다. 단, 원격 리포지토리에 관리할지는 선택
 ```java
@@ -34,7 +33,6 @@ spring:
 ```
 <img src="../img/config-server-result.png"/>
 
----
 * Config Server의 yml 파일에 다른 마이크로서비스들이 사용할 yml 파일들이 있는 디렉토리 경로를 명시해준다.
 * localhost:8888/{yml file name}/{profile name} 으로 어떤 파일이 불러와지는지 알 수 있다.
 * 만약 존재하지 않는 yml 파일이면 위 사진에서 propertySources 이후의 값이 없는 채로 오고, 존재하지 않는 profile이면 default 프로파일이 온다.
@@ -56,7 +54,6 @@ spring:
 * bootstrap.yml 파일을 추가해 위처럼 어디에 있는 config server에서 어떤 설정 파일을 가져올지 명시한다.
 <img src="../img/yml-fetch.png"/>
 
----
 * 마이크로서비스를 실행하면 위의 사진처럼 설정파일을 가져오는 로그가 남는 것을 볼 수 있다.
 ```yml
 # userservice의 application.yml 파일
@@ -83,7 +80,6 @@ public String status() {
 ```
 <img src="../img/health-check-result.png"/>
 
----
 * 실제로 마이크로서비스의 yml파일에는 token정보를 주석처리해서 없애줬지만 config server에서 해당 정보를 가져오기 때문에 userservice에서 토큰 정보에 접근할 수 있다.
 ## Config Server에서 설정 값 수정
 config server에서 설정값을 수정하면 userservice를 재기동해야 한다. 만약 재기동을 하기 싫으면 2가지 방법이 있는데 첫 번째 방법은 Actuator의 refresh endpoint를 사용하는 방법이 있고 두 번째 방법은 spring cloud bus를 사용하는 방법이 있다.
@@ -114,7 +110,6 @@ http.authorizeHttpRequests()
 ---
 <img src="../img/actuator-beans.png"/>
 
----
 * actuator를 통해 서비스에 대한 모니터링 정보를 위의 사진처럼 json 형태로 받아볼 수 있다.
 #### 기존의 결과 값
 <img src="../img/health-check-result.png"/>
