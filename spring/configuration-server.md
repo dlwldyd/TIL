@@ -39,8 +39,8 @@ spring:
 ## 마이크로서비스와 Config Server 연동
 ```gradle
 // spring cloud config server를 사용하기 위한 dependency
-	implementation 'org.springframework.cloud:spring-cloud-starter-config'
-	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+implementation 'org.springframework.cloud:spring-cloud-starter-config'
+implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
 ```
 * 마이크로서비스와 config server를 연동하기 위해서는 위와 같은 의존성을 추가해줘야한다.
 ```yml
@@ -86,7 +86,7 @@ config server에서 설정값을 수정하면 userservice를 재기동해야 한
 ### Actuator Refresh
 ```gradle
 // actuator 사용을 위한 dependency
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+implementation 'org.springframework.boot:spring-boot-starter-actuator'
 ```
 * actuator 기능을 하용하려면 위 사진과 같이 의존성을 추가해줘야 한다. actuator 기능자체는 spring boot에 포함되어있다.
 ```yml
