@@ -18,6 +18,17 @@ public class ConfigServiceApplication {
 * 프로젝트를 생성할 때 의존성에 Spring Cloud Config의 Config Server를 추가한다.
 * 프로젝트를 생성하면 메인함수가 있는 클래스에 @EnableConfigServer를 추가해준다.
 ```yml
+# ecommerce.yml 파일
+# file://C:\spring_cloud\git-local-repo 하위에 존재한다.
+# 깃으로 관리되고있어야 한다.(리모트 리포지토리로는 관리될 필요X)
+token:
+  expiration_time: 86400000
+  secret: FOJ2@#FJ33TF@#5Ffom#!@3@kkf2#$2FF234f2#gmFOJ2@#FJ33TF@#5Ffom#!@3@kkf2#$2FF234f2#gm-default
+
+gateway:
+  ip: 192.168.0.8
+```
+```yml
 server:
   port: 8888
 
@@ -134,3 +145,74 @@ gateway:
 
 ---
 * 설정 값이 바뀐 것을 확인할 수 있다.
+## 프로파일 나누기
+```yml
+# ecommerce.yml
+token:
+  expiration_time: 86400000
+  secret: FOJ2@#FJ33TF@#5Ffom#!@3@kkf2#$2FF234f2#gmFOJ2@#FJ33TF@#5Ffom#!@3@kkf2#$2FF234f2#gm-default
+
+gateway:
+  ip: 192.168.0.8
+```
+```yml
+# ecommerce-dev.yml
+token:
+  expiration_time: 86400000
+  secret: FOJ2@#FJ33TF@#5Ffom#!@3@kkf2#$2FF234f2#gmFOJ2@#FJ33TF@#5Ffom#!@3@kkf2#$2FF234f2#gm-dev
+
+gateway:
+  ip: 192.168.0.8
+```
+```yml
+# ecommerce-prod.yml
+token:
+  expiration_time: 86400000
+  secret: FOJ2@#FJ33TF@#5Ffom#!@3@kkf2#$2FF234f2#gmFOJ2@#FJ33TF@#5Ffom#!@3@kkf2#$2FF234f2#gm-prod
+
+gateway:
+  ip: 192.168.0.8
+```
+* config 파일을 {yml 파일 이름}-{프로파일 이름}.yml 로 여러개로 나눈다.
+```yml
+# user-service의 bootstrap.yml 파일
+spring:
+  cloud:
+    config:
+      uri: http://localhost:8888 # config server 주소
+      name: ecommerce # 가지고올 yml 파일 이름
+  profiles:
+    active: dev
+```
+```yml
+# apigateway-service의 bootstrap.yml 파일
+spring:
+  cloud:
+    config:
+      uri: http://localhost:8888 # config server 주소
+      name: ecommerce # 가지고올 yml 파일 이름
+  profiles:
+    active: dev
+```
+* 위와 같이 프로파일을 설정하면 config 파일을 땡길 때 ecommerce-dev.yml 파일을 땡겨온다.
+```yml
+# user-service의 bootstrap.yml 파일
+spring:
+  cloud:
+    config:
+      uri: http://localhost:8888 # config server 주소
+      name: ecommerce # 가지고올 yml 파일 이름
+  profiles:
+    active: prod
+```
+```yml
+# apigateway-service의 bootstrap.yml 파일
+spring:
+  cloud:
+    config:
+      uri: http://localhost:8888 # config server 주소
+      name: ecommerce # 가지고올 yml 파일 이름
+  profiles:
+    active: prod
+```
+* 위와 같이 프로파일을 설정하면 config 파일을 땡길 때 ecommerce-prod.yml 파일을 땡겨온다.
