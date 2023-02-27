@@ -64,7 +64,7 @@ password: local
 spring:
     config:
         activate:
-            on-profile: "local_rabbitMQ"
+            on-profile: "prod_rabbitMQ"
 
 username: prod
 password: prod
