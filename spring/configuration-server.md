@@ -40,11 +40,14 @@ spring:
       server:
         git:
           default-label: master # 깃허브 default 브랜치 이름이 main이 아닐 때 적어주자
-          uri: file://C:\spring_cloud\git-local-repo
+#          uri: file://C:\spring_cloud\git-local-repo
+          uri: https://github.com/dlwldyd/git-local-repo.git
+#          username: {username} private repo 사용 시 깃허브 아이디와 패스워드를 넣어줘야한다.
+#          password: {password}
 ```
 <img src="../img/config-server-result.png"/>
 
-* Config Server의 yml 파일에 다른 마이크로서비스들이 사용할 yml 파일들이 있는 디렉토리 경로를 명시해준다.
+* Config Server의 yml 파일에 다른 마이크로서비스들이 사용할 yml 파일들이 있는 uri를 명시해준다.
 * localhost:8888/{yml file name}/{profile name} 으로 어떤 파일이 불러와지는지 알 수 있다.
 * 만약 존재하지 않는 yml 파일이면 위 사진에서 propertySources 이후의 값이 없는 채로 오고, 존재하지 않는 profile이면 default 프로파일이 온다.
 ## 마이크로서비스와 Config Server 연동
