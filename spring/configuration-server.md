@@ -50,6 +50,22 @@ spring:
 * Config Server의 yml 파일에 다른 마이크로서비스들이 사용할 yml 파일들이 있는 uri를 명시해준다.
 * localhost:8888/{yml file name}/{profile name} 으로 어떤 파일이 불러와지는지 알 수 있다.
 * 만약 존재하지 않는 yml 파일이면 위 사진에서 propertySources 이후의 값이 없는 채로 오고, 존재하지 않는 profile이면 default 프로파일이 온다.
+```yml
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+ profiles:
+   active: native # native(git 사용X)로 사용하고 싶으면 넣어줘야한다.
+  cloud:
+    config:
+      server:
+       native:
+         search-locations: file:///${user.home}/OneDrive/Desktop/native-file-repo # 깃으로 관리 안해도됨, 파일경로를 적어준다.
+```
+* 깃으로 관리하기 싫으면 위와같이 설정을 하면 된다.
 ## 마이크로서비스와 Config Server 연동
 ```gradle
 // spring cloud config server를 사용하기 위한 dependency
