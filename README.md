@@ -53,6 +53,7 @@
   + [넷플릭스 유레카](spring/spring-netflix-eureka.md)
   + [API Gateway](spring/api-gateway.md)
   + [Configuration Server](spring/configuration-server.md)
+  + [Spring Cloud Bus](spring/spring-cloud-bus.md)
 ## JPA
 * [JPA 기본](jpa/jpa-base.md)
 * [영속성 컨텍스트](jpa/persistence-context.md)
