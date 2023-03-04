@@ -8,7 +8,7 @@ implementation 'org.springframework.boot:spring-boot-starter-actuator'
 * spring cloud bus를 사용하기 위해서는 위의 3개의 의존성을 설정해줘야한다.
 * actuator는 spring cloud bus가 actuator의 busrefresh 기능을 사용하기 때문에 추가해 준다.
 * amqp는 spring cloud bus를 rabbitMQ를 사용하여 구성하기 위해 추가한다.
-* bootstrap은 마이크로서비스의 bootstrap.yml 파일이 수정되었을 때 config 파일을 갱신하기 위해 추가한다.
+* bootstrap.yml 파일은 application.yml 파일과 다르게 자동으로 로딩이 되지 않는다. 따라서 bootstrap.yml 파일을 자동으로 로딩시켜 주기위해 bootstrap 을 의존성에 추가시켜준다.
 ```yml
 # configuration server의 application.yml 파일
 server:
