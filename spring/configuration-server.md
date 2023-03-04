@@ -80,6 +80,7 @@ spring:
     config:
       uri: http://localhost:8888 # config server 주소
       name: ecommerce # 가지고올 yml 파일 이름
+      # name: config-server # application 이름을 적으면 application.yml 파일을 가지고온다.
 ```
 * bootstrap.yml 파일을 추가해 위처럼 어디에 있는 config server에서 어떤 설정 파일을 가져올지 명시한다.
 <img src="../img/yml-fetch.png"/>
@@ -200,6 +201,7 @@ spring:
     config:
       uri: http://localhost:8888 # config server 주소
       name: ecommerce # 가지고올 yml 파일 이름
+      # name: config-server # application 이름을 적으면 application.yml 파일을 가지고온다.
   profiles:
     active: dev
 ```
@@ -210,6 +212,7 @@ spring:
     config:
       uri: http://localhost:8888 # config server 주소
       name: ecommerce # 가지고올 yml 파일 이름
+      # name: config-server # application 이름을 적으면 application.yml 파일을 가지고온다.
   profiles:
     active: dev
 ```
@@ -221,6 +224,7 @@ spring:
     config:
       uri: http://localhost:8888 # config server 주소
       name: ecommerce # 가지고올 yml 파일 이름
+      # name: config-server # application 이름을 적으면 application.yml 파일을 가지고온다.
   profiles:
     active: prod
 ```
@@ -231,6 +235,7 @@ spring:
     config:
       uri: http://localhost:8888 # config server 주소
       name: ecommerce # 가지고올 yml 파일 이름
+      # name: config-server # application 이름을 적으면 application.yml 파일을 가지고온다.
   profiles:
     active: prod
 ```
