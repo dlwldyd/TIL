@@ -55,3 +55,20 @@ management:
 <img src="../img/rabbitmq-queue.png"/>
 
 * rabbitMQ 설정값을 추가해주면 해당 마이크로서비스들이 rabbitMQ의 클라이언트가 된다.
+## 사용
+<img src="../img/user-service-secret-prechanged.png"/>
+
+* 기존 설정값은 토큰의 마지막이 application으로 끝난다.
+* 여기서 http://localhost:8000/user-service/actuator/busrefresh에 POST로 요청을 보낸다.
+
+<img src="../img/user-serivce-refresh.png"/>
+<img src="../img/api-gateway-refresh.png"/>
+<img src="../img/bus-refresh.png"/>
+
+* 요청을 보내면 204응답이 오고, user-service와 api-gateway의 로그를 보면 위와 같은 로그가 남은 것을 볼 수 있다.
+
+<img src="../img/user-service-secret-changed.png"/>
+<img src="../img/api-gateway-secret.png"/>
+
+* user-service 뿐만 아니라 api-gateway 또한 busrefresh 요청을 보내지 않았음에도 설정값이 바뀌어 있는 것을 볼 수 있다.
+* 이처럼 cloud bus를 사용하면 하나의 마이크로서비스에서 busrefresh 요청이 들어오면 다른 마이크로 서비스에 푸시해서 설정 값이 바뀐 다는 것을 알려주기 때문에 한 번만 busrefresh 요청을 보내면 된다.(refresh를 사용하면 마이크로서비스마다 일일이 요청을 보내야한다.)
