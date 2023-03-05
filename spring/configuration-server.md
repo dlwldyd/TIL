@@ -80,7 +80,7 @@ spring:
     config:
       uri: http://localhost:8888 # config server 주소
       name: ecommerce # 가지고올 yml 파일 이름
-      # name: config-server # application 이름을 적으면 application.yml 파일을 가지고온다.
+      # name: config-server # config server 의 application 이름을 적으면 application.yml 파일을 가지고온다.
 ```
 * bootstrap.yml 파일을 추가해 위처럼 어디에 있는 config server에서 어떤 설정 파일을 가져올지 명시한다.
 <img src="../img/yml-fetch.png"/>
@@ -201,7 +201,7 @@ spring:
     config:
       uri: http://localhost:8888 # config server 주소
       name: ecommerce # 가지고올 yml 파일 이름
-      # name: config-server # application 이름을 적으면 application.yml 파일을 가지고온다.
+      # name: config-server # config server 의 application 이름을 적으면 application.yml 파일을 가지고온다.
   profiles:
     active: dev
 ```
@@ -212,7 +212,7 @@ spring:
     config:
       uri: http://localhost:8888 # config server 주소
       name: ecommerce # 가지고올 yml 파일 이름
-      # name: config-server # application 이름을 적으면 application.yml 파일을 가지고온다.
+      # name: config-server # config server 의 application 이름을 적으면 application.yml 파일을 가지고온다.
   profiles:
     active: dev
 ```
@@ -224,7 +224,7 @@ spring:
     config:
       uri: http://localhost:8888 # config server 주소
       name: ecommerce # 가지고올 yml 파일 이름
-      # name: config-server # application 이름을 적으면 application.yml 파일을 가지고온다.
+      # name: config-server # config server 의 application 이름을 적으면 application.yml 파일을 가지고온다.
   profiles:
     active: prod
 ```
@@ -235,8 +235,76 @@ spring:
     config:
       uri: http://localhost:8888 # config server 주소
       name: ecommerce # 가지고올 yml 파일 이름
-      # name: config-server # application 이름을 적으면 application.yml 파일을 가지고온다.
+      # name: config-server # config server 의 application 이름을 적으면 application.yml 파일을 가지고온다.
   profiles:
     active: prod
 ```
 * 위와 같이 프로파일을 설정하면 config 파일을 땡길 때 ecommerce-prod.yml 파일을 땡겨온다.
+## 암호화
+### 대칭키 암호화
+```gradle
+implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+```
+```yml
+# config server의 bootstrap.yml 파일
+encrypt:
+  key: abcdefghijklmnopqjstuvwxyz0123456789
+```
+* bootstrap 의존성을 추가해주고 config server에 bootstrap.yml 파일을 추가한다. 그리고 해당 파일에 암호화를 위한 암호화 키를 넣어준다.
+
+<img src="../img/symmetric-encrypt.png"/>
+<img src="../img/symmetric-decrypt.png"/>
+
+* config server에 /encrypt로 데이터를 보내면 해당 데이터를 암호화한 값이 응답으로 오는 것을 볼 수 있다.
+* 암호화된 응답을 config server에 /decrypt로 post 요청을 보내면 복호화된 값이 응답으로 온 것을 볼 수 있다.
+```yml
+# user-service의 application.yml 파일
+spring:
+  application:
+    name: user-service
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+  h2:
+    console:
+      enabled: true
+      settings:
+        web-allow-others: true
+      path: /h2-console
+# 외부에서 값을 가져올 것이기 때문에 주석처리 해준다.
+#  datasource:
+#    url: jdbc:h2:mem:/~/test
+#    username: sa
+#    password:
+#    driver-class-name: org.h2.Driver
+```
+```yml
+# config server가 외부에서 가져오는 설정값(여기에서는 https://github.com/dlwldyd/git-local-repo.git)
+spring:
+ datasource:
+   url: jdbc:h2:mem:/~/test
+   username: sa
+   # 작은따옴표로 묶고 앞에 {cipher} 라 적으면 암호화된 값이라는 것을 명시하는 것이다.
+   password: '{cipher}30baf106cffc63bbca602196fbd0242494a4e7077995e6acedcaf8f656e7f64f'
+   driver-class-name: org.h2.Driver
+
+token:
+  expiration_time: 86400000
+  secret: FOJ2@#FJ33TF@#5Ffom#!@3@kkf2#$2FF234f2#gmFOJ2@#FJ33TF@#5Ffom#!@3@kkf2#$2FF234f2#gm-application
+
+gateway:
+  ip: 192.168.0.8
+```
+* 암호화가 필요한 값을 config server가 가져오는 외부 yml 파일로 옮겨준다.
+* 이 때 암호화된 값은 작은따옴표로 묶고 앞에 {cipher} 라 적어서 암호화된 값이라는 것을 명시한다.
+
+<img src="../img/config-server-response.png"/>
+
+* config server로 부터 설정 값을 확인해보면 spring.datasource.password가 복호화된 값(1234)로 온 것을 볼 수 있다.
+
+<img src="../img/h2-login-fail.png"/>
+<img src="../img/h2-login-success.png"/>
+
+* 아무 값이나 입력해서 로그인을 시도하면 로그인이 실패한 것을 볼 수 있지만 정확한 패스워드(1234)를 입력하면 로그인이 성공한 것을 볼 수 있다.
