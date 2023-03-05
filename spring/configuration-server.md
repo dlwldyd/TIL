@@ -308,3 +308,69 @@ gateway:
 <img src="../img/h2-login-success.png"/>
 
 * 아무 값이나 입력해서 로그인을 시도하면 로그인이 실패한 것을 볼 수 있지만 정확한 패스워드(1234)를 입력하면 로그인이 성공한 것을 볼 수 있다.
+### 비대칭키 암호화
+#### 개인키 생성
+```
+keytool -genkeypair -alias apiEncryptionKey -keyalg RSA -dname "CN=Jiyong, OU=API Development, O=test.co.kr, L=Seoul, C=KR" -keypass "test1234" -keystore apiEncryptionKey.jks -storepass "test1234"
+```
+* 키(개인키)를 생성한다. -genkeyPair 옵션을 사용해야 비대칭키로 생성이 된다.
+* -alias 옵션은 alias를 정하는데 사용한다. 원하는 아무 이름이나 사용하면 된다.
+* -keyalg는 암호화 알고리즘을 지정하는 옵션이다. 비대칭키를 사용한다면 주로 RSA 알고리즘을 사용한다.
+* -dname은 해당 키에 대한 메타 정보를 정하는데 사용한다.
+  * CN은 Common Name이다. 원하는 아무 이름이나 사용하면 된다.
+  * OU는 Organization Unit이다. 원하는 아무 이름이나 사용하면 된다.(보통은 용도)
+  * O는 Organization이다. 원하는 아무 이름이나 사용하면 된다.(보통 조직 이름 혹은 도메인)
+  * L은 Location이다.
+  * C는 Country이다.
+* -keypass는 키에 대한 패스워드를 정하는 옵션이다. 키를 사용할 때 해당 패스워드가 필요하다.
+* -keystore는 개인키가 저장되는 키 스토어 파일 이름을 지정하는 옵션이다.
+* -storepass는 키 스토어의 패스워드를 정하는 옵션이다. 키 스토어에 대한 작업을 할 때 해당 패스워드가 필요하다.
+#### 인증서 생성
+```
+keytool -export -alias apiEncryptionKey -keystore apiEncryptionKey.jks -rfc -file trustServer.cer
+```
+* 인증서를 생성하는 명령어이다.
+* -alias 옵션은 alias를 정하는데 사용한다. 원하는 아무 이름이나 사용하면 된다.
+* -rfc 옵션은 파일 출력 양식에 대한 옵션인데 rfc가 표준이니깐 보통은 이거만 쓴다.
+* -file 옵션은 출력하고자 하는 파일이름을 정하는데 사용하는 옵션이다.
+#### 공개키 생성
+```
+keytool -import -alias trustServer -file trustServer.cer -keystore publicKey.jks
+```
+* -alias 옵션은 alias를 정하는데 사용한다. 원하는 아무 이름이나 사용하면 된다.
+* -file 옵션은 어떤 인증서 파일을 import 할지 정하는 옵션이다.
+* -keystore는 공개키가 저장되는 키 스토어 파일 이름을 지정하는 옵션이다.
+
+<img src="../img/asymmetric-key.png"/>
+
+* 공개키는 trustedCertEntry로, 개인키는 PrivateKeyEntry로 표시되어 있는 것을 볼 수 있다.
+#### 비대칭키 사용
+```yml
+# config server의 application.yml 파일
+encrypt:
+  key-store:
+    location: file:///C:/spring_cloud/keystore/apiEncryptionKey.jks # 보통은 private key이다.
+    password: test1234
+    alias: apiEncryptionKey
+```
+* config server의 application.yml 파일에 key store를 지정한다.
+
+<img src="../img/asymmetric-encryption.png"/>
+
+```yml
+# 외부 설정 파일
+
+...
+
+token:
+  expiration_time: 86400000
+  secret: '{cipher}AQBlDzxlZODeLg7qt6DnAxeO6UOZBhQkso/WGdL8gf92OTfQeB1Zzddm+okKu1+l9+PSC/vkZ0ynEn6MkYCpnf1MWhV7WkCevWGnQ1cDt5k4qhHXI5VZDgNUI20qd4rTMMQyF/SY5eV3n0+cF7vUaSupRCtqqd83/UFNlmUV3/BYmQ1pYnGLVEiS5kt0xhvH+0Q/VukA8Nvs0MW5N6Vx5elAUsGiizC+rx21aXHe1v5lnsXqSXwROaIp52rWTfiR2uuHnUS1aNUUIh4ytKT1Nz8RApzw/lEGNwMUf2mAq8eHgnlRY9WuXApnBIwRpnIH5ovJ13G44XOX2u+jnioarZ7q5CHGdsXrKbKzgnU33cds4NZ2QAMirkcMgYUQIgcPJF4='
+
+gateway:
+  ip: 192.168.0.8
+```
+* 암호화된 값을 외부 설정 파일에 넣는다. 방법은 대칭키 암호화와 같다.
+
+<img src="../img/asymmetric-result.png"/>
+
+* config server로 부터 설정 값을 확인해보면 token.secret이 복호화된 값(token_secret)으로 온 것을 볼 수 있다.
