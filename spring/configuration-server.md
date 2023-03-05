@@ -83,6 +83,8 @@ spring:
       # name: config-server # config server 의 application 이름을 적으면 application.yml 파일을 가지고온다.
 ```
 * bootstrap.yml 파일을 추가해 위처럼 어디에 있는 config server에서 어떤 설정 파일을 가져올지 명시한다.
+* name에 설정 파일의 이름이 아니라 config server의 application name을 명시한다면 application.yml 파일에서 설정 값을 가져오게 된다.
+* 만약 여러 yml 파일에서 공통적으로 사용하는 설정 값이 있다면 application.yml 파일을 생성해 그 파일에 공통 값을 넣어주면 명시되어 있는 설정 파일(여기서는 ecommerce.yml)뿐만 아니라 application.yml에서도 설정 값을 가져온다.
 <img src="../img/yml-fetch.png"/>
 
 * 마이크로서비스를 실행하면 위의 사진처럼 설정파일을 가져오는 로그가 남는 것을 볼 수 있다.
