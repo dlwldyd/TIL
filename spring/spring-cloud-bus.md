@@ -5,7 +5,7 @@ implementation 'org.springframework.boot:spring-boot-starter-actuator'
 implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
 implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
 ```
-* spring cloud bus를 사용하기 위해서는 위의 3개의 의존성을 설정해줘야한다.
+* spring cloud bus를 사용하기 위해서는 위의 3개의 의존성을 설정 해줘야한다.
 * actuator는 spring cloud bus가 actuator의 busrefresh 기능을 사용하기 때문에 추가해 준다.
 * amqp는 spring cloud bus를 rabbitMQ를 사용하여 구성하기 위해 추가한다.
 * bootstrap.yml 파일은 application.yml 파일과 다르게 자동으로 로딩이 되지 않는다. 따라서 bootstrap.yml 파일을 자동으로 로딩시켜 주기위해 bootstrap 을 의존성에 추가시켜준다.
@@ -70,5 +70,5 @@ management:
 <img src="../img/user-service-secret-changed.png"/>
 <img src="../img/api-gateway-secret.png"/>
 
-* user-service 뿐만 아니라 api-gateway 또한 busrefresh 요청을 보내지 않았음에도 설정값이 바뀌어 있는 것을 볼 수 있다.
+* user-service 뿐만 아니라 api-gateway 또한 busrefresh 요청을 보내지 않았음에도 설정값이 바뀌어 있는 것을 알 수 있다.
 * 이처럼 cloud bus를 사용하면 하나의 마이크로서비스에서 busrefresh 요청이 들어오면 다른 마이크로 서비스에 푸시해서 설정 값이 바뀐 다는 것을 알려주기 때문에 한 번만 busrefresh 요청을 보내면 된다.(refresh를 사용하면 마이크로서비스마다 일일이 요청을 보내야한다.)
