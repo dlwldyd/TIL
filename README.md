@@ -54,6 +54,7 @@
   + [API Gateway](spring/api-gateway.md)
   + [Configuration Server](spring/configuration-server.md)
   + [Spring Cloud Bus](spring/spring-cloud-bus.md)
+  + [OpenFeign](spring/OpenFiegn.md)
 ## JPA
 * [JPA 기본](jpa/jpa-base.md)
 * [영속성 컨텍스트](jpa/persistence-context.md)

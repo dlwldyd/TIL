@@ -2,8 +2,8 @@
 ## 세팅
 ```gradle
 implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
-	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
+implementation 'org.springframework.cloud:spring-cloud-starter-bus-amqp'
+implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap'
 ```
 * spring cloud bus를 사용하기 위해서는 위의 3개의 의존성을 설정해줘야한다.
 * actuator는 spring cloud bus가 actuator의 busrefresh 기능을 사용하기 때문에 추가해 준다.
