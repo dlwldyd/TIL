@@ -16,7 +16,8 @@ public ResponseEntity<List<ResponseOrder>> getOrders(@PathVariable String userna
 implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 ```
 ```java
-@FeignClient(name = "order-service") // 서비스 이름
+@FeignClient(name = "order-service") // FeignClient 이름, url이 없으면 FeignClient의 이름과 같은 이름의 어플레케이션에 요청을 보낸다.
+// @FeignClient(name = "test", url = "https://jsonplaceholder.typicode.com")
 public interface OrderServiceClient {
 
     @GetMapping("/{userId}/orders")
@@ -28,6 +29,7 @@ public interface OrderServiceClient {
 List<ResponseOrder> orderList = orderServiceClient.getOrders(username);
 ```
  * @FeignClient 어노테이션에 적혀있는 어플리케이션에 `/{userId}/orders` 이라는 url로 Get 요청을 보내는 예제이다.
+ * @FeignClient 어노테이션에 url을 명시하지 않으면 name에 적힌 서비스 이름으로 요청을 보내지만 url을 명시한다면 해당 url로 요청을 보낸다(외부 url 가능)
  * 언터페이스만 생성해서 @FeignClient만 붙이면 된다.
  * 기본적인 컨트롤러의 어노테이션과 똑같이 사용하면 된다. POST 요청을 보낼때도 body는 @RequestBody 어노테이션을 통해 보내면 된다.
  * 반환타입은 JSON, xml 등 의 포맷으로 온 응답을 파싱할 수 있으면 된다.
