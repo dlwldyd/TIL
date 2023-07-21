@@ -16,7 +16,8 @@ public ResponseEntity<List<ResponseOrder>> getOrders(@PathVariable String userna
 implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
 ```
 ```java
-@FeignClient(name = "order-service") // FeignClient 이름, url이 없으면 FeignClient의 이름과 같은 이름의 어플레케이션에 요청을 보낸다.
+@FeignClient(name = "order-service", // FeignClient 이름, url이 없으면 FeignClient의 이름과 같은 이름의 어플레케이션에 요청을 보낸다.
+            configuration = {FeignGlobalConfig.class, FeignConfig.class}) // config 파일 지정 가능
 // @FeignClient(name = "test", url = "https://jsonplaceholder.typicode.com")
 public interface OrderServiceClient {
 
@@ -71,6 +72,18 @@ public class FeignErrorDecoder implements ErrorDecoder {
     }
 }
 ```
+```java
+@SpringBootApplication
+@EnableFeignClients // 붙여주지 않으면 open feign 작동 안함
+public class FeignStudyApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(FeignStudyApplication.class, args);
+    }
+
+}
+```
 * ErrorDecoder를 구현한 클래스를 스프링 빈으로 등록해주기만 하면 된다.
 * methodKey는 FeignClient의 어떤 메서드에서 예외가 발생했는가이다.
 * FeignClient의 메서드를 호출하는 쪽에서는 아무런 추가적인 코드를 쓰지 않아도 된다.
+* @EnableFeignClients 붙이는거 필수
