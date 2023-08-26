@@ -87,3 +87,43 @@ public class FeignStudyApplication {
 * methodKey는 FeignClient의 어떤 메서드에서 예외가 발생했는가이다.
 * FeignClient의 메서드를 호출하는 쪽에서는 아무런 추가적인 코드를 쓰지 않아도 된다.
 * @EnableFeignClients 붙이는거 필수
+## 커스터마이징 한 ObjectMapper 등록
+```java
+@Configuration
+public class FeignGlobalConfig {
+
+    @Bean
+    public Decoder feignDecoder() {
+        MappingJackson2HttpMessageConverter jacksonConverter = new MappingJackson2HttpMessageConverter(customObjectMapper());
+        ObjectFactory<HttpMessageConverters> objectFactory = () -> new HttpMessageConverters(jacksonConverter);
+        return new ResponseEntityDecoder(new SpringDecoder(objectFactory, new ObjectProvider<>() {
+            @Override
+            public HttpMessageConverterCustomizer getObject(Object... args) throws BeansException {
+                return null;
+            }
+
+            @Override
+            public HttpMessageConverterCustomizer getIfAvailable() throws BeansException {
+                return null;
+            }
+
+            @Override
+            public HttpMessageConverterCustomizer getIfUnique() throws BeansException {
+                return null;
+            }
+
+            @Override
+            public HttpMessageConverterCustomizer getObject() throws BeansException {
+                return null;
+            }
+        }));
+    }
+
+    private ObjectMapper customObjectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SnakeCaseStrategy.INSTANCE);
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        return objectMapper;
+    }
+}
+```
