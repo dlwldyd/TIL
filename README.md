@@ -55,7 +55,7 @@
   + [API Gateway](spring/api-gateway.md)
   + [Configuration Server](spring/configuration-server.md)
   + [Spring Cloud Bus](spring/spring-cloud-bus.md)
-  + [OpenFeign](spring/OpenFiegn.md)
+  + [OpenFeign](spring/OpenFeign.md)
 ## JPA
 * [JPA 기본](jpa/jpa-base.md)
 * [영속성 컨텍스트](jpa/persistence-context.md)
@@ -121,7 +121,7 @@
 * [인텔리제이 단축키](java/intelliJ.md)
 * [직렬화(Serializable)](java/Serializable.md)
 * [DocumentContext](java/DocumentContext.md)
-* [JsonDeserializer, JsonPojoBuilder](java/builder.md)
+* [JsonDeserializer, JsonPojoBuilder](java/jsonDeserializer.md)
 ## Go
 * [Go 기본](Go/basic.md)
 * [자료구조](Go/data-structure.md)
