@@ -15,7 +15,7 @@
 * [WebClient](spring/WebClient.md)
 * [Vault](spring/vault.md)
 * [logback](spring/logback.md)
-* [http body 값 여러번 읽기(ContentCachingRequestWrapper)](spring/ContentCachingRequestWrapper)
+* [http body 값 여러번 읽기(ContentCachingRequestWrapper)](spring/ContentCachingRequestWrapper.md)
 * [BigQuery](spring/bigquery.md)
 * __DI(Dependency Injection)__
     + [DI를 사용하는 이유](spring/DI(Dependency%20Injection).md)
