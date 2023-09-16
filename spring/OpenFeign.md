@@ -127,3 +127,25 @@ public class FeignGlobalConfig {
     }
 }
 ```
+## 런타임에 url 등록
+```java
+public interface TestFeignClient {
+
+    @GetMapping(path = "/api/test/v1")
+    List<GpsConnectionEntity> getGpsConnection(@RequestParam("transId") String reqId,
+                                               @RequestParam("startDate") Integer startDay,
+                                               @RequestParam("endDate") Integer endDay);
+}
+```
+* @FeignClient 어노테이션이 없어야함
+```java
+@Bean
+TestFeignClient TestFeignClient() {
+    return Feign.builder()
+            .contract(new SpringMvcContract()) // 필수
+            .encoder(new JacksonEncoder())
+            .decoder(new JacksonDecoder())
+            .target(TestFeignClient.class, vaultUrlProperties.getUrl());
+}
+```
+* 위와 같이 따로 bean으로 등록해줘야함
