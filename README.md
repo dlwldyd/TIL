@@ -126,6 +126,8 @@
 * [직렬화(Serializable)](java/Serializable.md)
 * [DocumentContext](java/DocumentContext.md)
 * [JsonDeserializer, JsonPojoBuilder](java/jsonDeserializer.md)
+* [reflection 사용법](java/reflection.md)
+* [java 빌드 옵션](java/build.md)
 ## Go
 * [Go 기본](Go/basic.md)
 * [자료구조](Go/data-structure.md)

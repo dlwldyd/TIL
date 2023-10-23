@@ -38,7 +38,7 @@ spec:
         - name: loc-test-platform
           image: idock.daumkakao.io/mobility-location/loc-test-platform-dev:latest
           env:
-            - name: JAVA_TOOL_OPTIONS # 빌드할 때 옵션 줄 수 있음
+            - name: JAVA_TOOL_OPTIONS # 시스템 환경변수 설정 가능
               value: >
                 -Dfile.encoding=UTF-8
                 -Xms6G
