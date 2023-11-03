@@ -111,13 +111,16 @@ apiVersion: v1
 metadata:
   name: ingress-vip
   namespace: ingress-nginx
+  annotations:
+    service.beta.kubernetes.io/openstack-internal-load-balancer: "true"
 spec:
   externalTrafficPolicy: Local
   selector:
-    app: app-name
+    app.kubernetes.io/name: ingress-nginx
   type: LoadBalancer
   ports:
     - name: web-port
       port: 80
       targetPort: 80
+
 ```
