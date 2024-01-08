@@ -145,6 +145,11 @@ TestFeignClient TestFeignClient() {
             .contract(new SpringMvcContract()) // 필수
             .encoder(new JacksonEncoder())
             .decoder(new JacksonDecoder())
+            .errorDecoder(new FeignErrorDecoder()) // 에러 디코더를 따로 등록해줘야함
+            .logger(new Slf4jLogger()) // 이걸 해야 http 로그 나옴
+            .logLevel(Logger.Level.FULL) // http 데이터 중 어디까지 로그 남길지(header 까지, response body 까지 등)
+            .retryer(new Retryer.Default(1000, TimeUnit.SECONDS.toMillis(2), 3)) // retry 설정
+            .options(new Request.Options(15, TimeUnit.SECONDS, 60, TimeUnit.SECONDS, true)) // connection timeout, read timeout 설정
             .target(TestFeignClient.class, vaultUrlProperties.getUrl());
 }
 ```
