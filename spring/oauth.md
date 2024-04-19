@@ -16,26 +16,26 @@ spring:
             client:
                 registration:
                     google: //어느 리소스 서버인지
-                        clientId: 클라이언트 아이디
-                        clientSecret: 클라이언트 시크릿
+                        client-id: 클라이언트 아이디
+                        client-secret: 클라이언트 시크릿
                         scope: # 클라이언트에게 허용된 리소스의 범위
                             - email
                             - profile
                     naver:
-                        clientId: 클라이언트 아이디
-                        clientSecret: 클라이언트 시크릿
+                        client-id: 클라이언트 아이디
+                        client-secret: 클라이언트 시크릿
                         scope:
                             - name
                             - email
-                        clientName: Naver
-                        authorizationGrantType: authorization_code # oauth grant type
+                        client-name: Naver
+                        authorization-grant-type: authorization_code # oauth grant type
                         redirectUri: http://localhost:8080/login/oauth2/code/naver # 네이버는 oauth-client가 제공하는 provider가 아니기 때문에 이걸 적어줘야한다
                 provider:
                     naver:
-                        authorizationUri: https://nid.naver.com/oauth2.0/authorize # 네이버 로그인 창
-                        tokenUri: https://nid.naver.com/oauth2.0/token # 토큰 발급 uri
-                        userInfoUri: https://openapi.naver.com/v1/nid/me # 프로필 접근 uri
-                        userNameAttribute: response # naver 에서 사용자 정보를 response 라는 키값에 넣어서 보내준다
+                        authorization-uri: https://nid.naver.com/oauth2.0/authorize # 네이버 로그인 창
+                        token-uri: https://nid.naver.com/oauth2.0/token # 토큰 발급 uri
+                        user-info-uri: https://openapi.naver.com/v1/nid/me # 프로필 접근 uri
+                        user-name-attribute: response # naver 에서 사용자 정보를 response 라는 키값에 넣어서 보내준다
 ```
 ```java
 @Configuration
