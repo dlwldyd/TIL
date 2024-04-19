@@ -29,7 +29,7 @@ spring:
                             - email
                         client-name: Naver
                         authorization-grant-type: authorization_code # oauth grant type
-                        redirectUri: http://localhost:8080/login/oauth2/code/naver # 네이버는 oauth-client가 제공하는 provider가 아니기 때문에 이걸 적어줘야한다
+                        redirect-uri: http://localhost:8080/login/oauth2/code/naver # 네이버는 oauth-client가 제공하는 provider가 아니기 때문에 이걸 적어줘야한다
                 provider:
                     naver:
                         authorization-uri: https://nid.naver.com/oauth2.0/authorize # 네이버 로그인 창
