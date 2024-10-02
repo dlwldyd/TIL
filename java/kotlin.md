@@ -43,7 +43,6 @@ fun doSomething(parameter: Long, block: () -> String): String {
 | **`also`**    | `it`          | 객체 자신             | 부수 작업(로깅, 디버깅, 검증)          |
 | **`with`**    | `this`        | 람다 블록의 결과 값    | 이미 생성된 객체에 대해 여러 작업 수행 |
 
----
 
 ### 예시
 
