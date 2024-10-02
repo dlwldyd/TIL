@@ -18,3 +18,18 @@
 
 ## 코루틴과 자바의 virtual thread 차이
 코루틴과 가상스레드 : java platform thread는 커널 스레드이고(정확히는 사용자 스레드이지만 커널 스레드처럼 동작한다) virtual thread는 사용자 스레드이다. 코루틴은 스레드가 아니라 동일 스레드에서 실행흐름만 관리한다. 따라서 virtual 스레드는 컨텍스트 스위칭이 발생하고 코루틴은 발생하지 않기 때문에 속도면에서는 코루틴이 더 빠를 수 있다. 다만 코루틴은 하나의 스레드에서 실행되기 때문에(withContext 블록을 사용안하면) 병렬처리를 할 때는 virtual thread가 더 빠를 수 있다.
+
+## 람다 블록
+자바에서 Function 사용해서 람다를 파라미터로 전달하는 것 처럼 코틀린도 람다 블록을 파라미터로 전달가능함
+```kotlin
+val value = testService.doSomething(parameter = parameter) {
+    //이 블록 내부의 로직이 doSomething의 block으로 전달됨
+    getValue(request = request)
+}
+```
+```kotlin
+fun doSomething(parameter: Long, block: () -> String): String {
+    println("doSomething 호출: parameter = $parameter")
+    return block()  // 전달된 람다 블록을 즉시 호출
+}
+```
