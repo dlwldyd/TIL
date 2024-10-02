@@ -33,3 +33,52 @@ fun doSomething(parameter: Long, block: () -> String): String {
     return block()  // 전달된 람다 블록을 즉시 호출
 }
 ```
+## 스코프 함수
+
+| **함수 이름** | **참조 방식** | **반환 값**            | **주요 사용 목적**                     |
+|---------------|---------------|------------------------|----------------------------------------|
+| **`let`**     | `it`          | 람다 블록의 결과 값    | Null 체크, 변수 범위 제한, 체이닝       |
+| **`run`**     | `this`        | 람다 블록의 결과 값    | 객체에 특정 연산 수행 후 결과 반환     |
+| **`apply`**   | `this`        | 객체 자신             | 객체 설정 및 초기화                   |
+| **`also`**    | `it`          | 객체 자신             | 부수 작업(로깅, 디버깅, 검증)          |
+| **`with`**    | `this`        | 람다 블록의 결과 값    | 이미 생성된 객체에 대해 여러 작업 수행 |
+
+---
+
+### 예시
+
+```kotlin
+// let 예시: Null 체크와 변수 범위 제한
+val name: String? = "Kotlin"
+name?.let {
+    println("The length of the name is: ${it.length}")
+}
+
+// run 예시: 특정 작업을 수행하고 결과 반환
+val person = Person("Alice", 25)
+val isAdult = person.run {
+    println("Name: $name")
+    age >= 18  // 블록의 마지막 값이 반환됨
+}
+println(isAdult)  // 출력: true
+
+// apply 예시: 객체 설정 및 초기화
+val person = Person().apply {
+    name = "Alice"
+    age = 25
+}
+println(person)  // Person(name=Alice, age=25)
+
+// also 예시: 부가 작업 수행 (로깅)
+val person = Person("John", 30).also {
+    println("Person created: $it")
+}
+
+// with 예시: 이미 생성된 객체에 여러 작업 수행
+val person = Person("Alice", 25)
+val result = with(person) {
+    println("Name: $name")
+    println("Current Age: $age")
+    age + 5  // 마지막 값이 반환됨
+}
+println(result)  // 출력: 30
