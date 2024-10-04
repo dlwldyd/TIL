@@ -81,3 +81,56 @@ val result = with(person) {
     age + 5  // 마지막 값이 반환됨
 }
 println(result)  // 출력: 30
+
+## inline, noinline, crossinline
+- inline : 해당 키워드가 붙은 함수를 인라인으로 처리한다.(보통 함수를 호출하면 해당 함수로 실행흐름이 이동하고 함수 호출 스택도 쌓이지만 인라인으로 실행하면 함수를 호출위치에 직접 복사에서 실행한다.)
+```kotlin
+inline fun printMessage(message: String) {
+    println(message)
+}
+
+fun main() {
+    printMessage("Hello, World!")  // 인라인 함수 호출
+}
+```
+- noinline : 인라인 함수가 여러 람다를 인자로 받을 때 특정 람다만 인라인되지 않도록 설정하는 키워드이다.
+```kotlin
+inline fun processData(a: Int, b: Int, noinline operation: (Int, Int) -> Int): Int {
+    return operation(a, b)  // `operation`은 인라인되지 않고, 람다 객체로 호출됩니다.
+}
+
+fun main() {
+    val result = processData(4, 5) { x, y -> x + y }
+    println(result)  // 출력: 9
+}
+```
+- crossinline : 인라인 함수 내에서 람다가 비지역 반환(non-local return)을 하지 못하도록 설정합니다. 코틀린의 인라인 함수는 기본적으로 비지역 반환을 허용합니다. 즉, 인라인 함수 내에서 return을 사용할 경우, 람다가 종료되는 것이 아니라 인라인 함수를 호출한 함수 자체가 종료될 수 있습니다.
+```kotlin
+inline fun runWithCrossInline(crossinline action: () -> Unit) {
+    println("Before action")
+    action()  // `crossinline`을 사용하여 비지역 반환 금지
+    println("After action")
+}
+
+fun main() {
+    runWithCrossInline {
+        println("Inside action")
+        // return  // 오류: `crossinline` 키워드가 적용된 람다 내에서는 `return`을 사용할 수 없음
+    }
+}
+```
+```kotlin
+// 비지역 반환 예시
+inline fun doSomething(action: () -> Unit) {
+    action()  // 람다 호출
+    println("This will not be printed if `return` is used in action")
+}
+
+fun main() {
+    doSomething {
+        println("Before return")
+        return  // `main` 함수가 종료됨
+    }
+    println("This will not be printed")  // 실행되지 않음
+}
+```
