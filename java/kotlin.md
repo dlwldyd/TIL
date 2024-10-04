@@ -81,6 +81,7 @@ val result = with(person) {
     age + 5  // 마지막 값이 반환됨
 }
 println(result)  // 출력: 30
+```
 
 ## inline, noinline, crossinline
 - inline : 해당 키워드가 붙은 함수를 인라인으로 처리한다.(보통 함수를 호출하면 해당 함수로 실행흐름이 이동하고 함수 호출 스택도 쌓이지만 인라인으로 실행하면 함수를 호출위치에 직접 복사에서 실행한다.)
