@@ -17,6 +17,7 @@
 * [logback](spring/logback.md)
 * [http body 값 여러번 읽기(ContentCachingRequestWrapper)](spring/ContentCachingRequestWrapper.md)
 * [BigQuery](spring/bigquery.md)
+* [actuator](spring/actuator.md)
 * __DI(Dependency Injection)__
     + [DI를 사용하는 이유](spring/DI(Dependency%20Injection).md)
     + [컴포넌트 스캔에서 의존관계 주입 방법](spring/component_scan.md)
