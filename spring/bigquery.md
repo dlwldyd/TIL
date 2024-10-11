@@ -57,17 +57,17 @@ public class DefaultCredentialsProvider implements CredentialsProvider {
           FixedCredentialsProvider.create(
               GoogleCredentials.fromStream(providedLocation.getInputStream()).createScoped(scopes)); // 기본적으로 사용하는 DefaultCredentialsProvider에서는 yml파일에 입력된 service account key 파일의 경로로부터 credential을 읽어온다.
     } else if (StringUtils.hasText(encodedKey)) {
-        
+
         ...
 
     } else {
-      
+
       ...
 
     }
 
     ...
-    
+
   }
 }
 ```
@@ -97,3 +97,41 @@ public class GcpCredentialProvider implements CredentialsProvider {
 }
 ```
 * 기존에는 DefaultCredentialProvider가 yml에 입력된 파일 경로로부터 credential을 읽어오도록 되어있다. 이를 내가 원하는 곳으로 부터 읽어 오도록 수정하여 bean으로 등록한다.
+## config 변경
+```yml
+spring:
+  autoconfigure:
+    exclude:
+      - com.google.cloud.spring.autoconfigure.core.GcpContextAutoConfiguration
+      - com.google.cloud.spring.autoconfigure.bigquery.GcpBigQueryAutoConfiguration
+```
+```java
+@Bean
+public CredentialsProvider googleCredentials() throws IOException {
+    return new GcpCredentialProvider(this.gcpProperties, vaultGcpKeyProperties);
+}
+```
+```java
+@Bean
+public BigQuery bigQuery(GcpProjectIdProvider projectIdProvider) throws IOException {
+    BigQueryOptions.Builder builder = BigQueryOptions.newBuilder()
+            .setProjectId(projectIdProvider.getProjectId())
+            .setHeaderProvider(new UserAgentHeaderProvider(GcpBigQueryConfig.class))
+            .setRetrySettings(RetrySettings.newBuilder()
+                    .setMaxAttempts(5)
+                    .setRetryDelayMultiplier(1.5)
+                    .setTotalTimeout(Duration.ofMinutes(5))
+                    .build())
+            .setTransportOptions(HttpTransportOptions.newBuilder()
+                    .setConnectTimeout(60000)
+                    .setReadTimeout(20000)
+                    .build());
+
+    BigQueryOptions bigQueryOptions = builder
+            .setCredentials(this.credentialsProvider.getCredentials())
+            .build();
+    return bigQueryOptions.getService();
+}
+```
+- PostBeanProcessor 가 안먹힐 때 위 방법 사용
+- GcpContextAutoConfiguration, GcpBigQueryAutoConfiguration 의 auto configuration 을 exclude 하고 해당 클래스에서 등록하는 빈 대신 내가 원하는대로 커스텀 해서 등록
